@@ -7,15 +7,13 @@ import NavGroup from './NavGroup/index.vue';
 import NavItem from './NavItem/index.vue';
 import NavCollapse from './NavCollapse/NavCollapse.vue';
 import Logo from '../logo/Logo.vue';
-import { useAuthStore } from '@/stores/auth';
 const customizer = useCustomizerStore();
 const sidebarMenu = shallowRef(sidebarItems);
-const authStore = useAuthStore();
 </script>
 
 <template>
-    <v-navigation-drawer left v-model="customizer.Sidebar_drawer" elevation="0" rail-width="75" 
-        app class="leftSidebar" :rail="customizer.mini_sidebar" expand-on-hover width="256">
+    <v-navigation-drawer left v-model="customizer.Sidebar_drawer" elevation="0" rail-width="75" app class="leftSidebar"
+        :rail="customizer.mini_sidebar" expand-on-hover width="256">
         <div class="pa-5 pl-4">
             <Logo />
         </div>

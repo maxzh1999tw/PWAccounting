@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { AppsIcon, CalendarIcon, MailIcon, MessagesIcon } from 'vue-tabler-icons';
-import AppsLink from './AppsLink.vue';
-import QuickLinks from './QuickLinks.vue';
+import { AppsIcon, CalendarIcon, MailIcon, MessagesIcon } from 'vue-tabler-icons'
 
 const open = ref(['Apps']);
 </script>
@@ -20,11 +18,6 @@ const open = ref(['Apps']);
                         <h5 class="text-subtitle-1 ml-2">Apps</h5>
                     </v-list-item>
                 </template>
-                <v-list-item class="pl-6 pb-6">
-                    <div>
-                        <AppsLink />
-                    </div>
-                </v-list-item>
             </v-list-group>
             <v-list-item>
                 <template v-slot:prepend>
@@ -45,10 +38,6 @@ const open = ref(['Apps']);
                 <h5 class="text-subtitle-1 ml-2">Mail</h5>
             </v-list-item>
         </v-list>
-        <div class="px-5">
-            <h5 class="text-h5 my-4">Quick Links</h5>
-            <QuickLinks />
-        </div>
     </div>
 </template>
 

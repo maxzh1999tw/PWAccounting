@@ -5,11 +5,7 @@ import { useCustomizerStore } from '../../../stores/customizer';
 import { GridDotsIcon, LanguageIcon, SearchIcon, Menu2Icon, BellRingingIcon, ShoppingCartIcon } from 'vue-tabler-icons';
 import Logo from '../logo/Logo.vue';
 // dropdown imports
-import LanguageDD from '../vertical-header/LanguageDD.vue';
-import NotificationDD from '../vertical-header/NotificationDD.vue';
-import ProfileDD from '../vertical-header/ProfileDD.vue';
 import Navigations from '../vertical-header/Navigations.vue';
-import Searchbar from '../vertical-header/Searchbar.vue';
 import RightMobileSidebar from '../vertical-header/RightMobileSidebar.vue';
 
 const customizer = useCustomizerStore();
@@ -33,47 +29,17 @@ watch(priority, (newPriority) => {
             <div class="hidden-md-and-down">
                 <Logo />
             </div>
-            <v-btn class="hidden-md-and-up" icon variant="text" @click.stop="customizer.SET_SIDEBAR_DRAWER" size="small">
-            <Menu2Icon size="25" />
-        </v-btn>
-            <!-- ------------------------------------------------>
-            <!-- Search part -->
-            <!-- ------------------------------------------------>
-           
-            <Searchbar />
-        
+            <v-btn class="hidden-md-and-up" icon variant="text" @click.stop="customizer.SET_SIDEBAR_DRAWER"
+                size="small">
+                <Menu2Icon size="25" />
+            </v-btn>
+
             <!---/Search part -->
             <v-spacer />
             <!-- ---------------------------------------------- -->
             <!---right part -->
             <!-- ---------------------------------------------- -->
 
-            <!-- ---------------------------------------------- -->
-            <!-- translate -->
-            <!-- ---------------------------------------------- -->
-            <LanguageDD />
-
-            <!-- ---------------------------------------------- -->
-            <!-- Notification -->
-            <!-- ---------------------------------------------- -->
-
-            <NotificationDD />
-
-            <!-- ---------------------------------------------- -->
-            <!-- ShoppingCart -->
-            <!-- ---------------------------------------------- -->
-            <v-btn icon variant="text" color="primary" to="">
-            <v-badge  color="error" :content="0">
-                <ShoppingCartIcon stroke-width="1.5" size="24" />
-            </v-badge>
-        </v-btn>
-
-            <!-- ---------------------------------------------- -->
-            <!-- User Profile -->
-            <!-- ---------------------------------------------- -->
-            <div class="ml-3 ">
-                <ProfileDD />
-            </div>
         </div>
     </v-app-bar>
 

@@ -7,10 +7,7 @@ import '@/scss/style.scss';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
-import { fakeBackend } from '@/utils/helpers/fake-backend';
 import 'vue3-carousel/dist/carousel.css';
-//Mock Api data
-import './_mockApis';
 
 import Maska from 'maska';
 // print
@@ -31,7 +28,6 @@ const i18n = createI18n({
 });
 
 const app = createApp(App);
-fakeBackend();
 app.use(router);
 app.component('EasyDataTable', Vue3EasyDataTable);
 app.use(PerfectScrollbar);
@@ -46,5 +42,5 @@ app.use(vuetify).mount('#app');
 // app.use(VueScrollTo);
 app.use(VueScrollTo, {
     duration: 1000,
-    easing: "ease"
-})
+    easing: 'ease'
+});

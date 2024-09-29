@@ -1,7 +1,7 @@
 const MainRoutes = {
     path: '/main',
     meta: {
-        requiresAuth: true
+        requiresAuth: false
     },
     redirect: '/main',
     component: () => import('@/layouts/full/FullLayout.vue'),
@@ -10,7 +10,7 @@ const MainRoutes = {
             name: 'Starter',
             path: '/',
             component: () => import('@/views/StarterPage.vue')
-        },
+        }
     ]
 };
 
