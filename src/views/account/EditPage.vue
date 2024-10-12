@@ -10,6 +10,19 @@ import { AccountCurrencyTypes, AccountTypeEnum, type AccountType } from '@/types
 import EditForm from './EditForm.vue';
 
 const page = ref({ title: '編輯帳戶' });
+const breadcrumbs = ref([
+    {
+        text: '帳戶管理',
+        disabled: false,
+        href: '/account'
+    },
+    {
+        text: '編輯帳戶',
+        disabled: true,
+        href: '#'
+    }
+]);
+
 const accountStore = useAccountsStore();
 
 const route = useRoute();
@@ -41,7 +54,7 @@ async function submit() {
 </script>
 
 <template>
-    <BaseBreadcrumb :title="page.title"></BaseBreadcrumb>
+    <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
     <v-row>
         <v-col cols="12" md="12">
             <v-card elevation="10" :loading="loading">
@@ -49,12 +62,15 @@ async function submit() {
                     <EditForm :model="model" @submit="submit">
                         <template #toolBarBottom>
                             <v-row class="mt-5">
-                                <v-col cols="12" md="12">
-                                    <v-btn color="primary" type="submit" :disabled="loading"
-                                        :loading="loading">儲存</v-btn>
-                                    <router-link to="/account" class="ml-2">
-                                        <v-btn variant="tonal" color="primary" :disabled="loading">取消</v-btn>
+                                <v-col cols="6" md="6">
+                                    <router-link to="/account">
+                                        <v-btn variant="tonal" color="primary" :disabled="loading"
+                                            class="w-100">取消</v-btn>
                                     </router-link>
+                                </v-col>
+                                <v-col cols="6" md="6">
+                                    <v-btn color="primary" type="submit" :disabled="loading" class="w-100"
+                                        :loading="loading">儲存</v-btn>
                                 </v-col>
                             </v-row>
                         </template>

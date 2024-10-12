@@ -4,9 +4,9 @@ export enum AccountTypeEnum {
 }
 
 export enum AccountCurrencyTypes {
-    NTD,
-    BTC,
-    JPY
+    NTD = 'NTD',
+    BTC = 'BTC',
+    JPY = 'JPY'
 }
 
 export type AccountType = {
