@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { AccountCurrencyTypes, AccountTypeEnum, type AccountType } from '@/types/mainTypes/AccountingTypes';
+import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import { router } from '@/router';
 import { useAccountsStore } from '@/stores/accounts';
 import { WalletIcon } from 'vue-tabler-icons';
@@ -16,11 +16,11 @@ function handleAddClick() {
     router.push('/account/add');
 }
 
-function handleAccountClick(selection: AccountType) {
+function handleAccountClick(selection: Account) {
     router.push(`/account/edit/${selection.id}`);
 }
 
-function displayBalance(balance: number, currency: AccountCurrencyTypes) {
+function displayBalance(balance: number, currency: AccountCurrencyEnum) {
     return `$${new Intl.NumberFormat().format(balance)} ${currency}`
 }
 

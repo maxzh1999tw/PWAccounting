@@ -1,4 +1,4 @@
-import { AccountCurrencyTypes, AccountTypeEnum, type AccountType } from '@/types/mainTypes/AccountingTypes';
+import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import { defineStore } from 'pinia';
 
 export const useAccountsStore = defineStore({
@@ -10,7 +10,7 @@ export const useAccountsStore = defineStore({
                 name: '現金',
                 type: AccountTypeEnum.General,
                 balance: 560000,
-                currency: AccountCurrencyTypes.NTD,
+                currency: AccountCurrencyEnum.NTD,
                 memo: '測試'
             },
             {
@@ -18,18 +18,18 @@ export const useAccountsStore = defineStore({
                 name: '銀行',
                 type: AccountTypeEnum.General,
                 balance: 7600,
-                currency: AccountCurrencyTypes.NTD,
+                currency: AccountCurrencyEnum.NTD,
                 memo: '銀行代碼 306'
             }
-        ] as AccountType[]
+        ] as Account[]
     }),
     getters: {},
     actions: {
-        addAccount(account: AccountType) {
+        addAccount(account: Account) {
             account.id = this.accounts.length + 1;
             this.accounts.push(account);
         },
-        updateAccount(account: AccountType) {
+        updateAccount(account: Account) {
             const index = this.accounts.findIndex((a) => a.id === account.id);
             this.accounts[index] = account;
         }

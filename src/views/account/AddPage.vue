@@ -5,8 +5,8 @@ import Swal from 'sweetalert2';
 import { router } from '@/router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { AccountCurrencyTypes, AccountTypeEnum, type AccountType } from '@/types/mainTypes/AccountingTypes';
-import EditForm from './EditForm.vue';
+import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
+import EditForm from '../../components/account/AccountEditForm.vue';
 
 const page = ref({ title: '新增帳戶' });
 const breadcrumbs = ref([
@@ -29,9 +29,9 @@ var model = ref({
     name: "",
     type: AccountTypeEnum.General,
     balance: 0,
-    currency: AccountCurrencyTypes.NTD,
+    currency: AccountCurrencyEnum.NTD,
     memo: undefined,
-} as AccountType);
+} as Account);
 
 var loading = ref(false);
 

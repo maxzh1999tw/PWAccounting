@@ -1,9 +1,11 @@
 import { createVuetify } from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css';
-import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 //DragScroll
-import { VueDraggableNext } from 'vue-draggable-next'
+import { VueDraggableNext } from 'vue-draggable-next';
+import { VTimePicker } from 'vuetify/labs/VTimePicker';
+
+import { pl, zhHans } from 'vuetify/locale';
 
 // import { BLUE_THEME} from '@/theme/LightTheme';
 import { BLUE_THEME, RED_THEME, PURPLE_THEME, GREEN_THEME, INDIGO_THEME, ORANGE_THEME } from '@/theme/LightTheme';
@@ -17,9 +19,14 @@ import {
 } from '@/theme/DarkTheme';
 
 export default createVuetify({
+    locale: {
+        locale: 'zhHans',
+        messages: { zhHans, pl }
+    },
     components: {
         draggable: VueDraggableNext,
-      },
+        VTimePicker
+    },
     directives,
 
     theme: {

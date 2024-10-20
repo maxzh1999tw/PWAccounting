@@ -5,7 +5,11 @@ import VerticalHeaderVue from './header/VerticalHeader.vue';
 import Customizer from './customizer/Customizer.vue';
 import { useCustomizerStore } from '../../stores/customizer';
 import { pl, zhHans } from 'vuetify/locale'
+import NewRecordDialog from '@/components/record/NewRecordDialog.vue';
+import { ref } from 'vue';
+import { PlusIcon } from 'vue-tabler-icons';
 const customizer = useCustomizerStore();
+const openNewRecordDialog = ref(false);
 </script>
 
 <template>
@@ -20,14 +24,15 @@ const customizer = useCustomizerStore();
             <!-- <Customizer /> -->
             <VerticalSidebarVue />
             <VerticalHeaderVue />
+            <NewRecordDialog v-model="openNewRecordDialog"></NewRecordDialog>
 
             <v-main>
                 <v-container fluid class="page-wrapper pb-sm-15 pb-10">
                     <div :class="customizer.boxed ? 'maxWidth' : ''">
                         <RouterView />
                         <v-btn class="customizer-btn" size="large" icon variant="flat" color="primary"
-                            @click.stop="customizer.SET_CUSTOMIZER_DRAWER(!customizer.Customizer_drawer)">
-                            <SettingsIcon />
+                            @click.stop="openNewRecordDialog = true">
+                            <PlusIcon />
                         </v-btn>
                     </div>
                 </v-container>

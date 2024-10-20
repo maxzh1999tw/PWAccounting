@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
-import { AccountCurrencyTypes, AccountTypeEnum, type AccountType } from '@/types/mainTypes/AccountingTypes';
+import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 
 const props = defineProps<{
-    model: AccountType;
+    model: Account;
 }>();
 
 const emit = defineEmits(['submit']);
@@ -23,20 +23,17 @@ const balanceRules = [(value: any) => {
 const accountTypeSelections = [{
     title: "一般",
     value: AccountTypeEnum.General,
-}, {
-    title: "投資",
-    value: AccountTypeEnum.Investment,
 }]
 
 const currencyTypeSelections = [{
     title: "新台幣",
-    value: AccountCurrencyTypes.NTD,
+    value: AccountCurrencyEnum.NTD,
 }, {
-    title: "比特幣",
-    value: AccountCurrencyTypes.BTC,
+    title: "BTC",
+    value: AccountCurrencyEnum.BTC,
 }, {
-    title: "日幣",
-    value: AccountCurrencyTypes.JPY,
+    title: "日圓",
+    value: AccountCurrencyEnum.JPY,
 }]
 
 async function submit() {
@@ -58,10 +55,10 @@ async function submit() {
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="8" md="8">
+            <v-col cols="7" md="8">
                 <v-text-field v-model="model.balance" type="number" label="帳戶餘額" :rules="balanceRules"></v-text-field>
             </v-col>
-            <v-col cols="4" md="4">
+            <v-col cols="5" md="4">
                 <v-select v-model="model.currency" :items="currencyTypeSelections" label="幣種"></v-select>
             </v-col>
         </v-row>
