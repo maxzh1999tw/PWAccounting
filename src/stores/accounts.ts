@@ -1,37 +1,58 @@
-import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
+import { getDB } from '@/models/idbs/dbContext';
+import { type Account } from '@/types/mainTypes/AccountingTypes';
 import { defineStore } from 'pinia';
+import { type IDBPDatabase } from 'idb';
 
+/** 定義 Store */
 export const useAccountsStore = defineStore({
     id: 'accounts',
     state: () => ({
-        accounts: [
-            {
-                id: 1,
-                name: '現金',
-                type: AccountTypeEnum.General,
-                balance: 560000,
-                currency: AccountCurrencyEnum.NTD,
-                memo: '測試'
-            },
-            {
-                id: 2,
-                name: '銀行',
-                type: AccountTypeEnum.General,
-                balance: 7600,
-                currency: AccountCurrencyEnum.NTD,
-                memo: '銀行代碼 306'
-            }
-        ] as Account[]
+        db: null as IDBPDatabase | null // 初始為 null，稍後再初始化
     }),
-    getters: {},
     actions: {
-        addAccount(account: Account) {
-            account.id = this.accounts.length + 1;
-            this.accounts.push(account);
+        /** 初始化資料庫連線 */
+        async initDB() {
+            if (!this.db) {
+                this.db = await getDB();
+            }
         },
-        updateAccount(account: Account) {
-            const index = this.accounts.findIndex((a) => a.id === account.id);
-            this.accounts[index] = account;
+
+        /** 取得所有帳戶資料 */
+        async getAll(): Promise<Account[]> {
+            await this.initDB(); // 確保資料庫已初始化
+            try {
+                const trans = this.db!.transaction('accounts', 'readonly');
+                return await trans.store.getAll();
+            } catch (error) {
+                console.error('取得帳戶資料失敗：', error);
+                return [];
+            }
+        },
+
+        /** 新增帳戶 */
+        async addAccount(account: Account) {
+            await this.initDB();
+            try {
+                const trans = this.db!.transaction('accounts', 'readwrite');
+                await trans.store.add(account);
+                await trans.done;
+            } catch (error) {
+                console.error('新增帳戶失敗：', error);
+                throw error;
+            }
+        },
+
+        /** 更新帳戶 */
+        async updateAccount(account: Account) {
+            await this.initDB();
+            try {
+                const trans = this.db!.transaction('accounts', 'readwrite');
+                await trans.store.put(account);
+                await trans.done;
+            } catch (error) {
+                console.error('更新帳戶失敗：', error);
+                throw error;
+            }
         }
     }
 });

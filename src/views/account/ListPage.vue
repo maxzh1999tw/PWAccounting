@@ -5,12 +5,12 @@ import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import { router } from '@/router';
 import { useAccountsStore } from '@/stores/accounts';
-import { WalletIcon } from 'vue-tabler-icons';
+
 
 const page = ref({ title: '帳戶管理' });
-const accountStore = useAccountsStore();
+const accountsStore = useAccountsStore();
 
-let accounts = ref(accountStore.accounts);
+let accounts = ref(await accountsStore.getAll());
 
 function handleAddClick() {
     router.push('/account/add');

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import { useAccountsStore } from '@/stores/accounts';
 import Swal from 'sweetalert2';
 import { router } from '@/router';
@@ -23,12 +23,13 @@ const breadcrumbs = ref([
     }
 ]);
 
-const accountStore = useAccountsStore();
+const accountsStore = useAccountsStore();
 
 const route = useRoute();
 const accountId = route.params.id;
 
-var modelIndex = accountStore.accounts.findIndex(x => x.id.toString() === accountId);
+const accounts = await accountsStore.getAll();
+var modelIndex = accounts.findIndex(x => x.id.toString() === accountId);
 if (modelIndex == -1) {
     Swal.fire({
         text: "找不到帳戶",
@@ -38,12 +39,12 @@ if (modelIndex == -1) {
     });
 }
 
-var model = ref(accountStore.accounts[modelIndex]);
+var model = ref(accounts[modelIndex]);
 var loading = ref(false);
 
 async function submit() {
     loading.value = true;
-    accountStore.updateAccount(model.value);
+    await accountsStore.updateAccount(toRaw(model.value));
     loading.value = false;
     await Swal.fire({
         text: "儲存成功",

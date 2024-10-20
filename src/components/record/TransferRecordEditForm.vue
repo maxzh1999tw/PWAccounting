@@ -15,6 +15,7 @@ const dateTimeDisplay = computed(() => {
 })
 
 const accountsStore = useAccountsStore();
+const accounts = await accountsStore.getAll();
 </script>
 
 <template>
@@ -50,8 +51,8 @@ const accountsStore = useAccountsStore();
                 <v-label class="font-weight-medium">轉出帳戶</v-label>
             </v-col>
             <v-col cols="9">
-                <v-select v-model="modelValue.fromAccountId" :items="accountsStore.accounts" item-title="name"
-                    item-value="id" hide-details></v-select>
+                <v-select v-model="modelValue.fromAccountId" :items="accounts" item-title="name" item-value="id"
+                    hide-details></v-select>
             </v-col>
         </v-row>
         <v-row class="align-center">
@@ -59,8 +60,8 @@ const accountsStore = useAccountsStore();
                 <v-label class="font-weight-medium">轉入帳戶</v-label>
             </v-col>
             <v-col cols="9">
-                <v-select v-model="modelValue.toAccountId" :items="accountsStore.accounts" item-title="name"
-                    item-value="id" hide-details></v-select>
+                <v-select v-model="modelValue.toAccountId" :items="accounts" item-title="name" item-value="id"
+                    hide-details></v-select>
             </v-col>
         </v-row>
         <v-row class="align-center">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import { useAccountsStore } from '@/stores/accounts';
 import Swal from 'sweetalert2';
 import { router } from '@/router';
@@ -37,7 +37,7 @@ var loading = ref(false);
 
 async function submit() {
     loading.value = true;
-    accountStore.addAccount(model.value);
+    await accountStore.addAccount(toRaw(model.value));
     loading.value = false;
     await Swal.fire({
         text: "儲存成功",
