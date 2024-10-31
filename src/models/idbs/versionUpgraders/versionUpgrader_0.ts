@@ -1,4 +1,4 @@
-import { AccountTypeEnum, AccountCurrencyEnum } from '@/types/mainTypes/AccountingTypes';
+import { AccountTypeEnum, CurrencyEnum } from '@/types/mainTypes/AccountingTypes';
 import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb';
 
 export default function (
@@ -15,7 +15,7 @@ export default function (
         name: '現金',
         type: AccountTypeEnum.General,
         balance: 560000,
-        currency: AccountCurrencyEnum.NTD,
+        currency: CurrencyEnum.NTD,
         memo: '測試'
     });
 
@@ -24,7 +24,7 @@ export default function (
         name: '銀行',
         type: AccountTypeEnum.General,
         balance: 7600,
-        currency: AccountCurrencyEnum.NTD,
+        currency: CurrencyEnum.NTD,
         memo: '銀行代碼 306'
     });
 }

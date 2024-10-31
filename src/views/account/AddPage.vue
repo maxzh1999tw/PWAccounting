@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { router } from '@/router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
+import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import EditForm from '../../components/account/AccountEditForm.vue';
 
 const page = ref({ title: '新增帳戶' });
@@ -29,7 +29,7 @@ var model = ref({
     name: "",
     type: AccountTypeEnum.General,
     balance: 0,
-    currency: AccountCurrencyEnum.NTD,
+    currency: CurrencyEnum.NTD,
     memo: undefined,
 } as Account);
 

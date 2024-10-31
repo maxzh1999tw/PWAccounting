@@ -2,7 +2,7 @@ export enum AccountTypeEnum {
     General
 }
 
-export enum AccountCurrencyEnum {
+export enum CurrencyEnum {
     NTD = 'NTD',
     BTC = 'BTC',
     JPY = 'JPY'
@@ -13,7 +13,7 @@ export type Account = {
     name: string;
     type: AccountTypeEnum;
     balance: number;
-    currency: AccountCurrencyEnum;
+    currency: CurrencyEnum;
     memo?: string;
 };
 

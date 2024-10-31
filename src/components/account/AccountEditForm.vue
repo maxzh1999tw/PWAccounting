@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits } from 'vue';
-import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
+import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 
 const props = defineProps<{
     model: Account;
@@ -27,13 +27,13 @@ const accountTypeSelections = [{
 
 const currencyTypeSelections = [{
     title: "新台幣",
-    value: AccountCurrencyEnum.NTD,
+    value: CurrencyEnum.NTD,
 }, {
     title: "BTC",
-    value: AccountCurrencyEnum.BTC,
+    value: CurrencyEnum.BTC,
 }, {
     title: "日圓",
-    value: AccountCurrencyEnum.JPY,
+    value: CurrencyEnum.JPY,
 }]
 
 async function submit() {

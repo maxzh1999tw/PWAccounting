@@ -6,7 +6,7 @@ import { router } from '@/router';
 import { useRoute } from 'vue-router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { AccountCurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
+import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import EditForm from '../../components/account/AccountEditForm.vue';
 
 const page = ref({ title: '編輯帳戶' });
