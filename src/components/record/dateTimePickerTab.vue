@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { formatDate } from '@/helpers/dateHelper';
 import { nextTick, ref, watch } from 'vue';
-import dayjs from 'dayjs'
 
 const props = defineProps<{
     modelValue: Date;
@@ -37,7 +37,7 @@ watch(dateTimePickerTime, () => {
 
 function open() {
     dateTimePickerDate.value = props.modelValue;
-    dateTimePickerTime.value = dayjs(props.modelValue).format("HH:mm");
+    dateTimePickerTime.value = formatDate(props.modelValue, "HH:mm");
     nextTick(() => {
         isDateTimePickerShown.value = true;
         dateTimePickerProgress.value = 0;

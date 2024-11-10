@@ -1,5 +1,5 @@
 export enum AccountTypeEnum {
-    General
+    General = '一般'
 }
 
 export enum CurrencyEnum {
@@ -9,7 +9,7 @@ export enum CurrencyEnum {
 }
 
 export type Account = {
-    id: number;
+    id?: number;
     name: string;
     type: AccountTypeEnum;
     balance: number;
@@ -18,13 +18,18 @@ export type Account = {
 };
 
 export type RecordCategory = {
-    id: number;
+    id?: number;
     name: string;
     isActive: boolean;
 };
 
+export interface Record {
+    id?: number;
+    dateTime: Date;
+}
+
 export type SpendRecord = {
-    id: number;
+    id?: number;
     dateTime: Date;
     amount: number;
     spendRecordCategoryId: number;
@@ -33,7 +38,7 @@ export type SpendRecord = {
 };
 
 export type IncomeRecord = {
-    id: number;
+    id?: number;
     dateTime: Date;
     amount: number;
     incomeRecordCategoryId: number;
@@ -42,7 +47,7 @@ export type IncomeRecord = {
 };
 
 export type TransferRecord = {
-    id: number;
+    id?: number;
     dateTime: Date;
     amount: number;
     fee: number;

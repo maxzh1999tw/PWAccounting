@@ -7,9 +7,9 @@ const MainRoutes = {
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
         {
-            name: 'Starter',
+            name: '記錄管理',
             path: '/',
-            component: () => import('@/views/StarterPage.vue')
+            component: () => import('@/views/record/ListPage.vue')
         },
         {
             name: '帳戶管理',

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, toRaw, watch } from "vue";
 import { XIcon } from "vue-tabler-icons"
 import SpendRecordEditForm from "./SpendRecordEditForm.vue";
-import { type IncomeRecord, type SpendRecord, type TransferRecord } from "@/types/mainTypes/AccountingTypes";
+import { type IncomeRecord, type Record, type SpendRecord, type TransferRecord } from "@/types/mainTypes/AccountingTypes";
 import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
+import { useRecordsStore } from "@/stores/records";
 const props = defineProps<{
     modelValue: boolean;
 }>();
@@ -18,7 +19,6 @@ enum typeTabEnum {
 watch(() => props.modelValue, () => {
     if (props.modelValue) {
         spendRecord.value = {
-            id: 0,
             dateTime: new Date(),
             amount: 0,
             spendRecordCategoryId: 1,
@@ -30,7 +30,6 @@ watch(() => props.modelValue, () => {
 
 const emit = defineEmits(['update:modelValue', 'submit']);
 const spendRecord = ref({
-    id: 0,
     dateTime: new Date(),
     amount: 0,
     spendRecordCategoryId: 1,
@@ -39,7 +38,6 @@ const spendRecord = ref({
 } as SpendRecord);
 
 const incomeRecord = ref({
-    id: 0,
     dateTime: new Date(),
     amount: 0,
     incomeRecordCategoryId: 1,
@@ -48,7 +46,6 @@ const incomeRecord = ref({
 } as IncomeRecord);
 
 const transferRecord = ref({
-    id: 0,
     dateTime: new Date(),
     amount: 0,
     fee: 0,
@@ -63,7 +60,6 @@ watch(typeTab, () => {
     switch (typeTab.value) {
         case typeTabEnum.spend:
             spendRecord.value = {
-                id: 0,
                 dateTime: new Date(),
                 amount: 0,
                 spendRecordCategoryId: 1,
@@ -73,7 +69,6 @@ watch(typeTab, () => {
             break;
         case typeTabEnum.income:
             incomeRecord.value = {
-                id: 0,
                 dateTime: new Date(),
                 amount: 0,
                 incomeRecordCategoryId: 1,
@@ -83,7 +78,6 @@ watch(typeTab, () => {
             break;
         case typeTabEnum.transfer:
             transferRecord.value = {
-                id: 0,
                 dateTime: new Date(),
                 amount: 0,
                 fee: 0,
@@ -94,6 +88,25 @@ watch(typeTab, () => {
             break;
     }
 })
+
+async function save() {
+    let record: Record;
+    switch (typeTab.value) {
+        case typeTabEnum.spend:
+            record = spendRecord.value;
+            break;
+        case typeTabEnum.income:
+            record = incomeRecord.value;
+            break;
+        case typeTabEnum.transfer:
+            record = transferRecord.value;
+            break;
+    }
+
+    var recordsStore = useRecordsStore();
+    await recordsStore.addRecord(toRaw(record));
+    emit('update:modelValue', false);
+}
 </script>
 
 <template>
@@ -131,7 +144,7 @@ watch(typeTab, () => {
                 </v-card-item>
 
                 <div class="w-100 mt-auto">
-                    <v-btn color="primary rounded-0" class="w-100 h-100 py-4">儲存</v-btn>
+                    <v-btn color="primary rounded-0" class="w-100 h-100 py-4" @click="save">儲存</v-btn>
                 </div>
             </v-card>
         </v-dialog>

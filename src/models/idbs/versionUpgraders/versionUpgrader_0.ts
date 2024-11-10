@@ -1,17 +1,23 @@
-import { AccountTypeEnum, CurrencyEnum } from '@/types/mainTypes/AccountingTypes';
+import { AccountTypeEnum, CurrencyEnum, type Account, type Record, type RecordCategory } from '@/types/mainTypes/AccountingTypes';
 import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb';
+import { StoreName } from '../names';
+import { nameof } from 'ts-simple-nameof';
 
 export default function (
     database: IDBPDatabase<unknown>,
     transaction: IDBPTransaction<unknown, StoreNames<unknown>[], 'versionchange'>
 ): void {
-    const accountStore = database.createObjectStore('accounts', { keyPath: 'id' });
-    database.createObjectStore('spendRecordTypes', { keyPath: 'id' });
-    database.createObjectStore('incomeRecordTypes', { keyPath: 'id' });
-    database.createObjectStore('records', { keyPath: 'id' });
+    addAccountsStore(database);
+    addRecordsStore(database);
+    addRecordCategoriesStore(database);
+}
 
+function addAccountsStore(database: IDBPDatabase<unknown>): void {
+    const accountStore = database.createObjectStore(StoreName.Accounts, {
+        keyPath: nameof<Account>((x) => x.id),
+        autoIncrement: true
+    });
     accountStore.add({
-        id: 1,
         name: '現金',
         type: AccountTypeEnum.General,
         balance: 560000,
@@ -20,11 +26,47 @@ export default function (
     });
 
     accountStore.add({
-        id: 2,
         name: '銀行',
         type: AccountTypeEnum.General,
         balance: 7600,
         currency: CurrencyEnum.NTD,
         memo: '銀行代碼 306'
+    });
+}
+
+function addRecordsStore(database: IDBPDatabase<unknown>): void {
+    const recordStore = database.createObjectStore(StoreName.Records, {
+        keyPath: nameof<Record>((x) => x.id),
+        autoIncrement: true
+    });
+    const propertyName = nameof<Record>((x) => x.dateTime);
+    recordStore.createIndex(propertyName, propertyName, { unique: false });
+}
+
+function addRecordCategoriesStore(database: IDBPDatabase<unknown>): void {
+    const spendRecordCategoriesStore = database.createObjectStore(StoreName.SpendRecordCategories, {
+        keyPath: nameof<RecordCategory>((x) => x.id),
+        autoIncrement: true
+    });
+    spendRecordCategoriesStore.add({
+        name: '飲食',
+        isActive: true
+    });
+    spendRecordCategoriesStore.add({
+        name: '生活',
+        isActive: true
+    });
+
+    const incomeRecordCategoriesStore = database.createObjectStore(StoreName.IncomeRecordCategories, {
+        keyPath: nameof<RecordCategory>((x) => x.id),
+        autoIncrement: true
+    });
+    incomeRecordCategoriesStore.add({
+        name: '薪資',
+        isActive: true
+    });
+    incomeRecordCategoriesStore.add({
+        name: '投資',
+        isActive: true
     });
 }

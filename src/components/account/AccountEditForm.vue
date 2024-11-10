@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 
 const props = defineProps<{
@@ -21,7 +21,7 @@ const balanceRules = [(value: any) => {
 }]
 
 const accountTypeSelections = [{
-    title: "一般",
+    title: AccountTypeEnum.General,
     value: AccountTypeEnum.General,
 }]
 

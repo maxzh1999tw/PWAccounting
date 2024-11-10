@@ -6,7 +6,6 @@ import { router } from '@/router';
 import { useRoute } from 'vue-router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import EditForm from '../../components/account/AccountEditForm.vue';
 
 const page = ref({ title: '編輯帳戶' });
@@ -29,7 +28,7 @@ const route = useRoute();
 const accountId = route.params.id;
 
 const accounts = await accountsStore.getAll();
-var modelIndex = accounts.findIndex(x => x.id.toString() === accountId);
+var modelIndex = accounts.findIndex(x => x?.id?.toString() === accountId);
 if (modelIndex == -1) {
     Swal.fire({
         text: "找不到帳戶",

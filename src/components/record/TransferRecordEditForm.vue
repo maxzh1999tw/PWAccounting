@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { ref, computed, useTemplateRef } from 'vue';
 import { type TransferRecord } from '@/types/mainTypes/AccountingTypes';
-import dayjs from 'dayjs'
 import { useAccountsStore } from '@/stores/accounts';
 import DateTimePickerTab from './dateTimePickerTab.vue';
+import { formatDate } from '@/helpers/dateHelper';
 
 const props = defineProps<{
     modelValue: TransferRecord;
 }>();
 
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
-const dateTimeDisplay = computed(() => {
-    return dayjs(props.modelValue.dateTime).format("YYYY-MM-DD  HH : mm")
-})
+const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YYYY-MM-DD  HH : mm"))
 
 const accountsStore = useAccountsStore();
 const accounts = await accountsStore.getAll();

@@ -25,7 +25,6 @@ const breadcrumbs = ref([
 const accountStore = useAccountsStore();
 
 var model = ref({
-    id: 0,
     name: "",
     type: AccountTypeEnum.General,
     balance: 0,

@@ -2,10 +2,10 @@
 import { computed, ref } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
+import { CurrencyEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import { router } from '@/router';
 import { useAccountsStore } from '@/stores/accounts';
-import currencyExchang from '@/models/accounts/currencyExchang';
+import currencyExchang from '@/models/accounting/currencyExchang';
 
 
 const page = ref({ title: '帳戶管理' });
@@ -26,7 +26,7 @@ function displayBalance(balance: number, currency: CurrencyEnum) {
 }
 
 const totalAssets = computed(() => {
-    return accounts.value.map(x => {
+    var assets = accounts.value.map(x => {
         if (x.currency == CurrencyEnum.NTD) {
             return x.balance;
         }
@@ -35,7 +35,13 @@ const totalAssets = computed(() => {
             amount: x.balance,
             currency: x.currency
         }, CurrencyEnum.NTD).amount;
-    }).reduce((a: number, b: number) => a + b);
+    });
+
+    if (assets.length == 0) {
+        return 0;
+    }
+
+    return assets.reduce((a, b) => Number(a) + Number(b));
 })
 
 </script>

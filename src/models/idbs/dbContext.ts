@@ -35,7 +35,9 @@ export async function getDB(): Promise<IDBPDatabase<DatabaseSchema>> {
                 transaction: IDBPTransaction<DatabaseSchema, string[], 'versionchange'>
             ) {
                 const versionUpgrader = [versionUpgrader_0];
-                versionUpgrader[oldVersion](db, transaction);
+                for (let i = oldVersion; i < (newVersion ?? oldVersion + 1); i++) {
+                    versionUpgrader[i](db, transaction);
+                }
             },
 
             /**
