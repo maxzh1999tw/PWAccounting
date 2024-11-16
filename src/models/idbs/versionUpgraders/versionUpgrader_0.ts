@@ -1,4 +1,11 @@
-import { AccountTypeEnum, CurrencyEnum, type Account, type Record, type RecordCategory } from '@/types/mainTypes/AccountingTypes';
+import {
+    AccountTypeEnum,
+    CurrencyEnum,
+    RecordTypeEnum,
+    type Account,
+    type Record,
+    type RecordCategory
+} from '@/types/mainTypes/AccountingTypes';
 import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb';
 import { StoreName } from '../names';
 import { nameof } from 'ts-simple-nameof';
@@ -44,29 +51,35 @@ function addRecordsStore(database: IDBPDatabase<unknown>): void {
 }
 
 function addRecordCategoriesStore(database: IDBPDatabase<unknown>): void {
-    const spendRecordCategoriesStore = database.createObjectStore(StoreName.SpendRecordCategories, {
+    const recordCategoriesStore = database.createObjectStore(StoreName.RecordCategories, {
         keyPath: nameof<RecordCategory>((x) => x.id),
         autoIncrement: true
     });
-    spendRecordCategoriesStore.add({
+
+    recordCategoriesStore.add({
         name: '飲食',
+        recordType: RecordTypeEnum.Spend,
         isActive: true
-    });
-    spendRecordCategoriesStore.add({
+    } as RecordCategory);
+
+    recordCategoriesStore.add({
         name: '生活',
+        recordType: RecordTypeEnum.Spend,
         isActive: true
     });
 
-    const incomeRecordCategoriesStore = database.createObjectStore(StoreName.IncomeRecordCategories, {
-        keyPath: nameof<RecordCategory>((x) => x.id),
-        autoIncrement: true
-    });
-    incomeRecordCategoriesStore.add({
+    recordCategoriesStore.add({
         name: '薪資',
+        recordType: RecordTypeEnum.Income,
         isActive: true
     });
-    incomeRecordCategoriesStore.add({
+
+    recordCategoriesStore.add({
         name: '投資',
+        recordType: RecordTypeEnum.Income,
         isActive: true
     });
+
+    const propertyName = nameof<RecordCategory>((x) => x.recordType);
+    recordCategoriesStore.createIndex(propertyName, propertyName, { unique: false });
 }

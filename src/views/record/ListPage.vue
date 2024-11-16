@@ -1,20 +1,53 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { computedAsync } from '@vueuse/core'
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { CurrencyEnum, type Record } from '@/types/mainTypes/AccountingTypes';
-import { useRecordsStore } from '@/stores/records';
-import { formatDate } from '@/helpers/dateHelper';
+import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
+import { useRecordCategoriesStore, useRecordsStore } from '@/stores/records';
+import { formatDate, getDateOnly, isSameDay } from '@/helpers/dateHelper';
+import { displayBalance } from '@/helpers/amountHelper';
+import { distinct } from '@/helpers/arrayHelper';
 
 
 const page = ref({ title: '紀錄管理' });
 const recordsStore = useRecordsStore();
 
 const month = ref(new Date());
-const monthRecords = ref(await recordsStore.getMonthRecords(month.value));
+const monthRecords = computedAsync(async () => await recordsStore.getMonthRecords(month.value));
+const recordGroupByDate = computed(() => {
+    let recordGroupList = distinct(monthRecords.value!.map(x => getDateOnly(x.dateTime)), x => x.getTime()).sort((a, b) => b.getTime() - a.getTime()).map(date => {
+        return {
+            date: date,
+            records: monthRecords!.value!.filter(x => isSameDay(x.dateTime, date)).sort((a, b) => (b?.id ?? 0) - (a?.id ?? 0)),
+            total: monthRecords!.value!.filter(x => isSameDay(x.dateTime, date)).sort((a, b) => (b?.id ?? 0) - (a?.id ?? 0)).map(x => getRecordAddOn(x)).reduce((a, b) => a + b)
+        }
+    })
+    return recordGroupList;
+});
+
+const categoriesStore = useRecordCategoriesStore();
+const categories = await categoriesStore.getAll();
 
 function handleRecordClick(record: Record) {
 
+}
+
+function getRecordAddOn(record: Record): number {
+    let times = 0;
+    switch (record.recordType) {
+        case RecordTypeEnum.Spend:
+            times = -1;
+            break;
+        case RecordTypeEnum.Income:
+            times = 1;
+            break;
+        case RecordTypeEnum.Transfer:
+            times = 0;
+            break;
+    }
+
+    return record.amount * times;
 }
 
 </script>
@@ -33,18 +66,47 @@ function handleRecordClick(record: Record) {
             </v-row>
         </v-card-text>
         <v-divider class="border-opacity-75"></v-divider>
-        <v-list>
-            <template v-for="(record, i) in monthRecords" :key="record.id">
-                <v-list-item color="primary" class="py-3" @click="handleRecordClick(record)">
-                    <v-list-item-title class="text-subtitle-1">{{ formatDate(record.dateTime, "MM/dd")
-                        }}</v-list-item-title>
+        <v-list class="py-0">
+            <template v-for="(dateGroup, i) in recordGroupByDate" :key="dateGroup.date">
+
+                <v-list-item color="secondary" class="py-3">
+                    <v-list-item-title class="text-subtitle-1">
+                        {{ formatDate(dateGroup.date, "MM/DD (ddd)") }}
+                    </v-list-item-title>
                     <template v-slot:append>
-                        <v-list-item-subtitle class="text-subtitle-1 text-high-emphasis mr-3">
-                            $5,151
+                        <v-list-item-subtitle opacity="100" class="text-subtitle-1">
+                            {{ dateGroup.total ? displayBalance(dateGroup.total) : "" }}
                         </v-list-item-subtitle>
                     </template>
                 </v-list-item>
-                <v-divider class="border-opacity-75" v-if="(i + 1) != monthRecords.length"></v-divider>
+
+                <div v-for="(record) in dateGroup.records" :key="record.id">
+                    <v-list-item v-if="record.recordType == RecordTypeEnum.Spend" class="py-3"
+                        @click="handleRecordClick(record)">
+                        <v-list-item-title class="text-subtitle-1 text-medium-emphasis">
+                            {{ categories.find(x => x.id == record.categoryId)?.name }}
+                        </v-list-item-title>
+                        <template v-slot:append>
+                            <v-list-item-subtitle opacity="100" class="text-subtitle-1 text-primary">
+                                {{ displayBalance(record.amount) }}
+                            </v-list-item-subtitle>
+                        </template>
+                    </v-list-item>
+                    <v-list-item v-if="record.recordType == RecordTypeEnum.Income" class="py-3"
+                        @click="handleRecordClick(record)">
+                        <v-list-item-title class="text-subtitle-1 text-medium-emphasis">
+                            {{ categories.find(x => x.id == record.categoryId)?.name }}
+                        </v-list-item-title>
+                        <template v-slot:append>
+                            <v-list-item-subtitle opacity="100" class="text-subtitle-1 text-secondary">
+                                {{ displayBalance(record.amount) }}
+                            </v-list-item-subtitle>
+                        </template>
+                    </v-list-item>
+                    <v-divider class="border-opacity-75" v-if="(i + 1) != dateGroup.records.length"></v-divider>
+                </div>
+
+                <v-divider class="border-opacity-75" v-if="(i + 1) != recordGroupByDate.length"></v-divider>
             </template>
         </v-list>
     </v-card>

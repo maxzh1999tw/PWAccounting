@@ -20,38 +20,25 @@ export type Account = {
 export type RecordCategory = {
     id?: number;
     name: string;
+    recordType: RecordTypeEnum;
     isActive: boolean;
 };
 
-export interface Record {
-    id?: number;
-    dateTime: Date;
+export enum RecordTypeEnum {
+    Spend = '支出',
+    Income = '收入',
+    Transfer = '轉移'
 }
 
-export type SpendRecord = {
+export type Record = {
     id?: number;
+    recordType: RecordTypeEnum;
     dateTime: Date;
     amount: number;
-    spendRecordCategoryId: number;
-    accountId: number;
+    categoryId?: number;
+    accountId?: number;
     memo?: string;
-};
-
-export type IncomeRecord = {
-    id?: number;
-    dateTime: Date;
-    amount: number;
-    incomeRecordCategoryId: number;
-    accountId: number;
-    memo?: string;
-};
-
-export type TransferRecord = {
-    id?: number;
-    dateTime: Date;
-    amount: number;
+    // 以下是轉移專用欄位
     fee: number;
-    fromAccountId: number;
     toAccountId: number;
-    memo?: string;
 };

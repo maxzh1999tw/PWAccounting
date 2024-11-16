@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, useTemplateRef } from 'vue';
-import { type TransferRecord } from '@/types/mainTypes/AccountingTypes';
+import { computed, useTemplateRef } from 'vue';
+import { type Record } from '@/types/mainTypes/AccountingTypes';
 import { useAccountsStore } from '@/stores/accounts';
 import DateTimePickerTab from './dateTimePickerTab.vue';
 import { formatDate } from '@/helpers/dateHelper';
 
 const props = defineProps<{
-    modelValue: TransferRecord;
+    modelValue: Record;
 }>();
 
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
@@ -31,9 +31,10 @@ const accounts = await accountsStore.getAll();
             <v-col cols="3">
                 <v-label class="font-weight-medium">金額</v-label>
             </v-col>
+
             <v-col cols="9">
-                <v-text-field color="primary" variant="outlined" type="number" v-model="modelValue.amount"
-                    hide-details />
+                <v-number-input color="primary" variant="outlined" v-model="modelValue.amount"
+                    hide-details></v-number-input>
             </v-col>
         </v-row>
         <v-row class="align-center">
@@ -49,7 +50,7 @@ const accounts = await accountsStore.getAll();
                 <v-label class="font-weight-medium">轉出帳戶</v-label>
             </v-col>
             <v-col cols="9">
-                <v-select v-model="modelValue.fromAccountId" :items="accounts" item-title="name" item-value="id"
+                <v-select v-model="modelValue.accountId" :items="accounts" item-title="name" item-value="id"
                     hide-details></v-select>
             </v-col>
         </v-row>

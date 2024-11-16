@@ -2,89 +2,83 @@
 import { ref, toRaw, watch } from "vue";
 import { XIcon } from "vue-tabler-icons"
 import SpendRecordEditForm from "./SpendRecordEditForm.vue";
-import { type IncomeRecord, type Record, type SpendRecord, type TransferRecord } from "@/types/mainTypes/AccountingTypes";
+import { RecordTypeEnum, type Record } from "@/types/mainTypes/AccountingTypes";
 import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
-import { useRecordsStore } from "@/stores/records";
+import { useRecordCategoriesStore, useRecordsStore } from "@/stores/records";
+import { useAccountsStore } from "@/stores/accounts";
 const props = defineProps<{
     modelValue: boolean;
 }>();
 
-enum typeTabEnum {
-    spend = "spend",
-    income = "income",
-    transfer = "transfer"
+const accountList = await useAccountsStore().getAll();
+const firstAccountId = accountList.length >= 1 ? accountList[0].id : undefined;
+const secondAccountId = accountList.length >= 2 ? accountList[1].id : firstAccountId;
+
+const spendCategoryList = await useRecordCategoriesStore().getCatigoriesByRecordType(RecordTypeEnum.Spend);
+const firstSpendCategoryId = spendCategoryList.length >= 1 ? spendCategoryList[0].id : undefined;
+const incomeCategoryList = await useRecordCategoriesStore().getCatigoriesByRecordType(RecordTypeEnum.Income);
+const firstIncomeCategoryId = incomeCategoryList.length >= 1 ? incomeCategoryList[0].id : undefined;
+
+function getNewSpendRecord(): Record {
+    return {
+        recordType: RecordTypeEnum.Spend,
+        dateTime: new Date(),
+        amount: 0,
+        categoryId: firstSpendCategoryId,
+        accountId: firstAccountId,
+        memo: undefined,
+    } as Record;
+}
+
+function getNewIncomeRecord(): Record {
+    return {
+        recordType: RecordTypeEnum.Income,
+        dateTime: new Date(),
+        amount: 0,
+        categoryId: firstIncomeCategoryId,
+        accountId: firstAccountId,
+        memo: undefined,
+    } as Record;
+}
+
+function getNewTransferRecord(): Record {
+    return {
+        recordType: RecordTypeEnum.Transfer,
+        dateTime: new Date(),
+        amount: 0,
+        fee: 0,
+        accountId: firstAccountId,
+        toAccountId: secondAccountId,
+        memo: undefined,
+    } as Record;
 }
 
 watch(() => props.modelValue, () => {
     if (props.modelValue) {
-        spendRecord.value = {
-            dateTime: new Date(),
-            amount: 0,
-            spendRecordCategoryId: 1,
-            accountId: 1,
-            memo: undefined,
-        }
+        spendRecord.value = getNewSpendRecord();
     }
 })
 
 const emit = defineEmits(['update:modelValue', 'submit']);
-const spendRecord = ref({
-    dateTime: new Date(),
-    amount: 0,
-    spendRecordCategoryId: 1,
-    accountId: 1,
-    memo: undefined,
-} as SpendRecord);
+const spendRecord = ref(getNewSpendRecord());
 
-const incomeRecord = ref({
-    dateTime: new Date(),
-    amount: 0,
-    incomeRecordCategoryId: 1,
-    accountId: 1,
-    memo: undefined,
-} as IncomeRecord);
+const incomeRecord = ref(getNewIncomeRecord());
 
-const transferRecord = ref({
-    dateTime: new Date(),
-    amount: 0,
-    fee: 0,
-    fromAccountId: 1,
-    toAccountId: 2,
-    memo: undefined,
-} as TransferRecord);
+const transferRecord = ref(getNewTransferRecord());
 
-const typeTab = ref(typeTabEnum.spend)
+const typeTab = ref(RecordTypeEnum.Spend)
 
 watch(typeTab, () => {
     switch (typeTab.value) {
-        case typeTabEnum.spend:
-            spendRecord.value = {
-                dateTime: new Date(),
-                amount: 0,
-                spendRecordCategoryId: 1,
-                accountId: 1,
-                memo: undefined,
-            };
+        case RecordTypeEnum.Spend:
+            spendRecord.value = getNewSpendRecord();
             break;
-        case typeTabEnum.income:
-            incomeRecord.value = {
-                dateTime: new Date(),
-                amount: 0,
-                incomeRecordCategoryId: 1,
-                accountId: 1,
-                memo: undefined,
-            };
+        case RecordTypeEnum.Income:
+            incomeRecord.value = getNewIncomeRecord();
             break;
-        case typeTabEnum.transfer:
-            transferRecord.value = {
-                dateTime: new Date(),
-                amount: 0,
-                fee: 0,
-                fromAccountId: 1,
-                toAccountId: 2,
-                memo: undefined,
-            }
+        case RecordTypeEnum.Transfer:
+            transferRecord.value = getNewTransferRecord();
             break;
     }
 })
@@ -92,13 +86,13 @@ watch(typeTab, () => {
 async function save() {
     let record: Record;
     switch (typeTab.value) {
-        case typeTabEnum.spend:
+        case RecordTypeEnum.Spend:
             record = spendRecord.value;
             break;
-        case typeTabEnum.income:
+        case RecordTypeEnum.Income:
             record = incomeRecord.value;
             break;
-        case typeTabEnum.transfer:
+        case RecordTypeEnum.Transfer:
             record = transferRecord.value;
             break;
     }
@@ -123,21 +117,21 @@ async function save() {
                     </v-toolbar-items>
                 </v-toolbar>
                 <v-tabs fixed-tabs v-model="typeTab" class="w-100" color="primary">
-                    <v-tab :value="typeTabEnum.spend">支出</v-tab>
-                    <v-tab :value="typeTabEnum.income">收入</v-tab>
-                    <v-tab :value="typeTabEnum.transfer">帳戶互轉</v-tab>
+                    <v-tab :value="RecordTypeEnum.Spend">支出</v-tab>
+                    <v-tab :value="RecordTypeEnum.Income">收入</v-tab>
+                    <v-tab :value="RecordTypeEnum.Transfer">帳戶互轉</v-tab>
                 </v-tabs>
                 <v-card-item>
                     <v-tabs-window v-model="typeTab">
-                        <v-tabs-window-item :value="typeTabEnum.spend">
+                        <v-tabs-window-item :value="RecordTypeEnum.Spend">
                             <SpendRecordEditForm v-model="spendRecord"></SpendRecordEditForm>
                         </v-tabs-window-item>
 
-                        <v-tabs-window-item :value="typeTabEnum.income">
+                        <v-tabs-window-item :value="RecordTypeEnum.Income">
                             <IncomeRecordEditForm v-model="incomeRecord"></IncomeRecordEditForm>
                         </v-tabs-window-item>
 
-                        <v-tabs-window-item :value="typeTabEnum.transfer">
+                        <v-tabs-window-item :value="RecordTypeEnum.Transfer">
                             <TransferRecordEditForm v-model="transferRecord"></TransferRecordEditForm>
                         </v-tabs-window-item>
                     </v-tabs-window>

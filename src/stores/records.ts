@@ -1,20 +1,22 @@
-import { type Record, type RecordCategory as RecordCategory } from '@/types/mainTypes/AccountingTypes';
+import { RecordTypeEnum, type Record, type RecordCategory as RecordCategory } from '@/types/mainTypes/AccountingTypes';
 import { defineStore } from 'pinia';
 import { getDB } from '@/models/idbs/dbContext';
 import { StoreName } from '@/models/idbs/names';
 import { getMothRange } from '@/helpers/dateHelper';
+import { nameof } from 'ts-simple-nameof';
 
 export const useRecordCategoriesStore = defineStore({
     id: 'RecordCategories',
     actions: {
-        async getSpendCategories(): Promise<RecordCategory[]> {
+        async getCatigoriesByRecordType(recordType: RecordTypeEnum): Promise<RecordCategory[]> {
             const db = await getDB();
-            const trans = db!.transaction(StoreName.SpendRecordCategories, 'readonly');
-            return await trans.store.getAll();
+            const trans = db!.transaction(StoreName.RecordCategories, 'readonly');
+            const index = trans.store.index(nameof<RecordCategory>((x) => x.recordType));
+            return await index.getAll(recordType);
         },
-        async getIncomeCategories(): Promise<RecordCategory[]> {
+        async getAll(): Promise<RecordCategory[]> {
             const db = await getDB();
-            const trans = db!.transaction(StoreName.IncomeRecordCategories, 'readonly');
+            const trans = db!.transaction(StoreName.RecordCategories, 'readonly');
             return await trans.store.getAll();
         }
     }
@@ -31,7 +33,7 @@ export const useRecordsStore = defineStore({
             const { startOfMonth, endOfMonth } = getMothRange(month);
             const monthRange = IDBKeyRange.bound(startOfMonth, endOfMonth, false, false);
 
-            return await trans.store.getAll(monthRange);
+            return await trans.store.index('dateTime').getAll(monthRange);
         },
         async addRecord(record: Record): Promise<void> {
             const db = await getDB();

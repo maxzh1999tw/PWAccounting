@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
-import { type SpendRecord as SpendRecord } from '@/types/mainTypes/AccountingTypes';
+import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
 import { useRecordCategoriesStore } from '@/stores/records';
 import { useAccountsStore } from '@/stores/accounts';
 import DateTimePickerTab from './dateTimePickerTab.vue';
 import { formatDate } from '@/helpers/dateHelper';
 
 const props = defineProps<{
-    modelValue: SpendRecord;
+    modelValue: Record;
 }>();
 
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
 const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YYYY-MM-DD  HH : mm"))
 
-const recordCategorysStore = useRecordCategoriesStore();
-const spendRecordCategorys = await recordCategorysStore.getSpendCategories();
+
 const accountsStore = useAccountsStore();
 const accounts = await accountsStore.getAll();
+
+const recordCategorysStore = useRecordCategoriesStore();
+const categories = await recordCategorysStore.getCatigoriesByRecordType(RecordTypeEnum.Spend);
 </script>
 
 <template>
@@ -35,8 +37,8 @@ const accounts = await accountsStore.getAll();
                 <v-label class="font-weight-medium">金額</v-label>
             </v-col>
             <v-col cols="9">
-                <v-text-field color="primary" variant="outlined" type="number" v-model="modelValue.amount"
-                    hide-details />
+                <v-number-input color="primary" variant="outlined" v-model="modelValue.amount"
+                    hide-details></v-number-input>
             </v-col>
         </v-row>
         <v-row class="align-center">
@@ -44,8 +46,8 @@ const accounts = await accountsStore.getAll();
                 <v-label class="font-weight-medium">類別</v-label>
             </v-col>
             <v-col cols="9">
-                <v-select v-model="modelValue.spendRecordCategoryId" :items="spendRecordCategorys" item-title="name"
-                    item-value="id" hide-details></v-select>
+                <v-select v-model="modelValue.categoryId" :items="categories" item-title="name" item-value="id"
+                    hide-details></v-select>
             </v-col>
         </v-row>
         <v-row class="align-center">

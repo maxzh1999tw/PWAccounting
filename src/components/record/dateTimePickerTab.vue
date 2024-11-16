@@ -44,6 +44,14 @@ function open() {
     })
 }
 
+function updateHour(hour: number) {
+    if (isDateTimePickerShown.value) {
+        let newDateTime = new Date(props.modelValue);
+        newDateTime.setHours(hour);
+        emit("update:modelValue", newDateTime);
+    }
+}
+
 defineExpose({
     open,
 });
@@ -64,7 +72,8 @@ defineExpose({
                     </v-tabs-window-item>
 
                     <v-tabs-window-item value="1">
-                        <v-time-picker v-model="dateTimePickerTime" format="24hr" class="py-4" title="">
+                        <v-time-picker v-model="dateTimePickerTime" format="24hr" class="py-4" title=""
+                            @update:hour="updateHour">
                         </v-time-picker>
                     </v-tabs-window-item>
                 </v-tabs-window>

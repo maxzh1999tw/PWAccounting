@@ -6,6 +6,7 @@ import { CurrencyEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import { router } from '@/router';
 import { useAccountsStore } from '@/stores/accounts';
 import currencyExchang from '@/models/accounting/currencyExchang';
+import { displayBalance } from '@/helpers/amountHelper';
 
 
 const page = ref({ title: '帳戶管理' });
@@ -19,10 +20,6 @@ function handleAddClick() {
 
 function handleAccountClick(selection: Account) {
     router.push(`/account/edit/${selection.id}`);
-}
-
-function displayBalance(balance: number, currency: CurrencyEnum) {
-    return `$${new Intl.NumberFormat().format(balance)} ${currency}`
 }
 
 const totalAssets = computed(() => {

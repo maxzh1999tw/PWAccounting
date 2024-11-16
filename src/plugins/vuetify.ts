@@ -4,6 +4,7 @@ import * as directives from 'vuetify/directives';
 //DragScroll
 import { VueDraggableNext } from 'vue-draggable-next';
 import { VTimePicker } from 'vuetify/labs/VTimePicker';
+import { VNumberInput } from 'vuetify/labs/VNumberInput';
 
 import { pl, zhHans } from 'vuetify/locale';
 
@@ -25,7 +26,8 @@ export default createVuetify({
     },
     components: {
         draggable: VueDraggableNext,
-        VTimePicker
+        VTimePicker,
+        VNumberInput
     },
     directives,
 
