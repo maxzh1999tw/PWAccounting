@@ -40,6 +40,12 @@ export const useRecordsStore = defineStore({
             const trans = db!.transaction(StoreName.Records, 'readwrite');
             trans.store.add(record);
             await trans.done;
+        },
+        async updateRecord(record: Record): Promise<void> {
+            const db = await getDB();
+            const trans = db!.transaction(StoreName.Records, 'readwrite');
+            trans.store.put(record);
+            await trans.done;
         }
     }
 });

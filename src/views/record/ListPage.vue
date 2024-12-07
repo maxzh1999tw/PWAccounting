@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { computedAsync } from '@vueuse/core'
+import { computed, ref, toRaw, useTemplateRef, watch } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
@@ -9,13 +8,20 @@ import { formatDate, getDateOnly, isSameDay } from '@/helpers/dateHelper';
 import { displayBalance } from '@/helpers/amountHelper';
 import { distinct } from '@/helpers/arrayHelper';
 import { useAccountsStore } from '@/stores/accounts';
+import EditRecordDialog from '@/components/record/EditRecordDialog.vue';
 
 
 const page = ref({ title: '紀錄管理' });
 const recordsStore = useRecordsStore();
 
 const month = ref(new Date());
-const monthRecords = computedAsync(async () => await recordsStore.getMonthRecords(month.value));
+const monthRecords = ref(await recordsStore.getMonthRecords(month.value))
+watch(month, refreshList);
+
+async function refreshList() {
+    monthRecords.value = await recordsStore.getMonthRecords(month.value);
+}
+
 const recordGroupByDate = computed(() => {
     let recordGroupList = distinct(monthRecords.value!.map(x => getDateOnly(x.dateTime)), x => x.getTime()).sort((a, b) => b.getTime() - a.getTime()).map(date => {
         return {
@@ -33,8 +39,9 @@ const categories = await categoriesStore.getAll();
 const accountStore = useAccountsStore();
 const accounts = await accountStore.getAll();
 
+const editRecordDialog = useTemplateRef('editRecordDialog')
 function handleRecordClick(record: Record) {
-
+    editRecordDialog!.value!.openDialog(record);
 }
 
 function getRecordAddOn(record: Record): number {
@@ -52,6 +59,10 @@ function getRecordAddOn(record: Record): number {
     }
 
     return record.amount * times;
+}
+
+async function onRecordSaved(record: Record) {
+    await recordsStore.updateRecord(toRaw(record));
 }
 
 </script>
@@ -131,4 +142,6 @@ function getRecordAddOn(record: Record): number {
             </template>
         </v-list>
     </v-card>
+
+    <edit-record-dialog @onSave="onRecordSaved" ref="editRecordDialog"></edit-record-dialog>
 </template>

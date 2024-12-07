@@ -42,3 +42,37 @@ export type Record = {
     fee: number;
     toAccountId: number;
 };
+
+export function getNewSpendRecord(initCategoryId: number | undefined, initAccountId: number | undefined): Record {
+    return {
+        recordType: RecordTypeEnum.Spend,
+        dateTime: new Date(),
+        amount: 0,
+        categoryId: initCategoryId,
+        accountId: initAccountId,
+        memo: undefined
+    } as Record;
+}
+
+export function getNewIncomeRecord(initCategoryId: number | undefined, initAccountId: number | undefined): Record {
+    return {
+        recordType: RecordTypeEnum.Income,
+        dateTime: new Date(),
+        amount: 0,
+        categoryId: initCategoryId,
+        accountId: initAccountId,
+        memo: undefined
+    } as Record;
+}
+
+export function getNewTransferRecord(initAccountId1: number | undefined, initAccountId2: number | undefined): Record {
+    return {
+        recordType: RecordTypeEnum.Transfer,
+        dateTime: new Date(),
+        amount: 0,
+        fee: 0,
+        accountId: initAccountId1,
+        toAccountId: initAccountId2,
+        memo: undefined
+    } as Record;
+}

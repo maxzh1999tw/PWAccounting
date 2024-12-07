@@ -1,0 +1,62 @@
+<script setup lang="ts">
+import { ref, toRaw, watch } from "vue";
+import { XIcon } from "vue-tabler-icons"
+import SpendRecordEditForm from "./SpendRecordEditForm.vue";
+import { getNewSpendRecord, RecordTypeEnum, type Record } from "@/types/mainTypes/AccountingTypes";
+import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
+import TransferRecordEditForm from "./TransferRecordEditForm.vue";
+
+const record = ref(getNewSpendRecord(undefined, undefined));
+
+defineExpose({
+    openDialog,
+});
+
+const open = ref(false);
+
+const emit = defineEmits(['onSave']);
+
+async function save() {
+    if (record.value) {
+        emit('onSave', record.value);
+    }
+    open.value = false;
+}
+
+function openDialog(editingRecord: Record) {
+    record.value = editingRecord;
+    open.value = true;
+}
+</script>
+
+<template>
+    <div class="text-center">
+        <v-dialog v-model="open" fullscreen transition="dialog-bottom-transition">
+            <v-card :rounded="false">
+                <v-toolbar dark color="primary" style="flex: unset">
+                    <v-btn icon color="inherit" @click="open = false" flat>
+                        <XIcon width="20" />
+                    </v-btn>
+                    <v-toolbar-title>編輯記錄</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-item>
+                    <SpendRecordEditForm v-model="record" v-if="record.recordType == RecordTypeEnum.Spend">
+                    </SpendRecordEditForm>
+
+                    <IncomeRecordEditForm v-model="record" v-if="record.recordType == RecordTypeEnum.Income">
+                    </IncomeRecordEditForm>
+
+                    <TransferRecordEditForm v-model="record" v-if="record.recordType == RecordTypeEnum.Transfer">
+                    </TransferRecordEditForm>
+                </v-card-item>
+
+                <div class="w-100 mt-auto">
+                    <v-btn color="primary rounded-0" class="w-100 h-100 py-4" @click="save">儲存</v-btn>
+                </div>
+            </v-card>
+        </v-dialog>
+    </div>
+</template>

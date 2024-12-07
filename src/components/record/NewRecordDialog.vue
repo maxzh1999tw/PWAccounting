@@ -2,7 +2,7 @@
 import { ref, toRaw, watch } from "vue";
 import { XIcon } from "vue-tabler-icons"
 import SpendRecordEditForm from "./SpendRecordEditForm.vue";
-import { RecordTypeEnum, type Record } from "@/types/mainTypes/AccountingTypes";
+import { getNewIncomeRecord, getNewSpendRecord, getNewTransferRecord, RecordTypeEnum, type Record } from "@/types/mainTypes/AccountingTypes";
 import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
 import { useRecordCategoriesStore, useRecordsStore } from "@/stores/records";
@@ -20,65 +20,31 @@ const firstSpendCategoryId = spendCategoryList.length >= 1 ? spendCategoryList[0
 const incomeCategoryList = await useRecordCategoriesStore().getCatigoriesByRecordType(RecordTypeEnum.Income);
 const firstIncomeCategoryId = incomeCategoryList.length >= 1 ? incomeCategoryList[0].id : undefined;
 
-function getNewSpendRecord(): Record {
-    return {
-        recordType: RecordTypeEnum.Spend,
-        dateTime: new Date(),
-        amount: 0,
-        categoryId: firstSpendCategoryId,
-        accountId: firstAccountId,
-        memo: undefined,
-    } as Record;
-}
-
-function getNewIncomeRecord(): Record {
-    return {
-        recordType: RecordTypeEnum.Income,
-        dateTime: new Date(),
-        amount: 0,
-        categoryId: firstIncomeCategoryId,
-        accountId: firstAccountId,
-        memo: undefined,
-    } as Record;
-}
-
-function getNewTransferRecord(): Record {
-    return {
-        recordType: RecordTypeEnum.Transfer,
-        dateTime: new Date(),
-        amount: 0,
-        fee: 0,
-        accountId: firstAccountId,
-        toAccountId: secondAccountId,
-        memo: undefined,
-    } as Record;
-}
-
 watch(() => props.modelValue, () => {
     if (props.modelValue) {
-        spendRecord.value = getNewSpendRecord();
+        spendRecord.value = getNewSpendRecord(firstSpendCategoryId, firstAccountId);
     }
 })
 
 const emit = defineEmits(['update:modelValue', 'submit']);
-const spendRecord = ref(getNewSpendRecord());
+const spendRecord = ref(getNewSpendRecord(firstSpendCategoryId, firstAccountId));
 
-const incomeRecord = ref(getNewIncomeRecord());
+const incomeRecord = ref(getNewIncomeRecord(firstIncomeCategoryId, firstAccountId));
 
-const transferRecord = ref(getNewTransferRecord());
+const transferRecord = ref(getNewTransferRecord(firstAccountId, secondAccountId));
 
 const typeTab = ref(RecordTypeEnum.Spend)
 
 watch(typeTab, () => {
     switch (typeTab.value) {
         case RecordTypeEnum.Spend:
-            spendRecord.value = getNewSpendRecord();
+            spendRecord.value = getNewSpendRecord(firstSpendCategoryId, firstAccountId);
             break;
         case RecordTypeEnum.Income:
-            incomeRecord.value = getNewIncomeRecord();
+            incomeRecord.value = getNewIncomeRecord(firstIncomeCategoryId, firstAccountId);
             break;
         case RecordTypeEnum.Transfer:
-            transferRecord.value = getNewTransferRecord();
+            transferRecord.value = getNewTransferRecord(firstAccountId, secondAccountId);
             break;
     }
 })
