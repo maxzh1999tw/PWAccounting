@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRaw, useTemplateRef, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, toRaw, useTemplateRef, watch } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
@@ -9,6 +9,7 @@ import { displayBalance } from '@/helpers/amountHelper';
 import { distinct } from '@/helpers/arrayHelper';
 import { useAccountsStore } from '@/stores/accounts';
 import EditRecordDialog from '@/components/record/EditRecordDialog.vue';
+import emitter from '@/eventBus';
 
 
 const page = ref({ title: '紀錄管理' });
@@ -64,6 +65,18 @@ function getRecordAddOn(record: Record): number {
 async function onRecordSaved(record: Record) {
     await recordsStore.updateRecord(toRaw(record));
 }
+
+const handleNewRecordAdded = () => {
+    refreshList();
+};
+
+onMounted(() => {
+    emitter.on('new-record-added', handleNewRecordAdded);
+});
+
+onUnmounted(() => {
+    emitter.off('new-record-added', handleNewRecordAdded);
+});
 
 </script>
 

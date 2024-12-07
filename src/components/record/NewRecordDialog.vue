@@ -7,6 +7,7 @@ import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
 import { useRecordCategoriesStore, useRecordsStore } from "@/stores/records";
 import { useAccountsStore } from "@/stores/accounts";
+import emitter from "@/eventBus";
 const props = defineProps<{
     modelValue: boolean;
 }>();
@@ -66,6 +67,7 @@ async function save() {
     var recordsStore = useRecordsStore();
     await recordsStore.addRecord(toRaw(record));
     emit('update:modelValue', false);
+    emitter.emit('new-record-added');
 }
 </script>
 
