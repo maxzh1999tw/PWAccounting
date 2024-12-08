@@ -29,3 +29,9 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 export function getDateOnly(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
+
+export function AddMonth(date: Date, months: number): Date {
+    const result = new Date(date);
+    result.setMonth(result.getMonth() + months);
+    return result;
+}

@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, toRaw, useTemplateRef, watch } from 'vue';
-
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
 import { useRecordCategoriesStore, useRecordsStore } from '@/stores/records';
-import { formatDate, getDateOnly, isSameDay } from '@/helpers/dateHelper';
+import { AddMonth, formatDate, getDateOnly, isSameDay } from '@/helpers/dateHelper';
 import { displayBalance } from '@/helpers/amountHelper';
 import { distinct } from '@/helpers/arrayHelper';
 import { useAccountsStore } from '@/stores/accounts';
 import EditRecordDialog from '@/components/record/EditRecordDialog.vue';
 import emitter from '@/eventBus';
 
-
+// ==========================
+// ===== 頁面設定與初始化 =====
+// ==========================
 const page = ref({ title: '紀錄管理' });
 const recordsStore = useRecordsStore();
 
+const categoriesStore = useRecordCategoriesStore();
+const categories = await categoriesStore.getAll();
+
+const accountStore = useAccountsStore();
+const accounts = await accountStore.getAll();
+
+// ===================
+// ===== 紀錄列表 =====
+// ===================
 const month = ref(new Date());
 const monthRecords = ref(await recordsStore.getMonthRecords(month.value))
 watch(month, refreshList);
@@ -34,16 +44,6 @@ const recordGroupByDate = computed(() => {
     return recordGroupList;
 });
 
-const categoriesStore = useRecordCategoriesStore();
-const categories = await categoriesStore.getAll();
-
-const accountStore = useAccountsStore();
-const accounts = await accountStore.getAll();
-
-const editRecordDialog = useTemplateRef('editRecordDialog')
-function handleRecordClick(record: Record) {
-    editRecordDialog!.value!.openDialog(record);
-}
 
 function getRecordAddOn(record: Record): number {
     let times = 0;
@@ -62,21 +62,38 @@ function getRecordAddOn(record: Record): number {
     return record.amount * times;
 }
 
+// =================
+// ===== 統計 ======
+// =================
+function changeMonth(add: number) {
+    month.value = AddMonth(month.value, add);
+}
+
+const spendSum = computed(() => {
+    return monthRecords.value.filter(x => x.recordType == RecordTypeEnum.Spend).map(x => x.amount).reduce((sum, current) => sum + current, 0);
+})
+
+const incomeSum = computed(() => {
+    return monthRecords.value.filter(x => x.recordType == RecordTypeEnum.Income).map(x => x.amount).reduce((sum, current) => sum + current, 0);
+})
+
+// ===================
+// ===== 編輯紀錄 =====
+// ===================
+const editRecordDialog = useTemplateRef('editRecordDialog')
+function handleRecordClick(record: Record) {
+    editRecordDialog!.value!.openDialog(record);
+}
+
 async function onRecordSaved(record: Record) {
     await recordsStore.updateRecord(toRaw(record));
 }
 
-const handleNewRecordAdded = () => {
-    refreshList();
-};
-
-onMounted(() => {
-    emitter.on('new-record-added', handleNewRecordAdded);
-});
-
-onUnmounted(() => {
-    emitter.off('new-record-added', handleNewRecordAdded);
-});
+// ==============================
+// ===== 新紀錄事件(全局事件) =====
+// ==============================
+onMounted(() => emitter.on('new-record-added', refreshList));
+onUnmounted(() => emitter.off('new-record-added', refreshList));
 
 </script>
 
@@ -85,11 +102,29 @@ onUnmounted(() => {
         <BaseBreadcrumb :title="page.title"></BaseBreadcrumb>
     </div>
     <v-card elevation="10">
-        <v-card-text class="py-4 px-6 text-white bg-primary">
+        <v-card-text class="text-white bg-primary pb-4">
             <v-row>
+                <v-col cols="3" class="text-start py-0">
+                    <v-btn variant="flat" color="primary" @click="changeMonth(-1)" icon="mdi-menu-left">
+                    </v-btn>
+                </v-col>
+                <v-col cols="6" class="text-center py-0">
+                    <h2 class="py-3">{{ month.getFullYear() }} 年 {{ month.getMonth() + 1 }} 月</h2>
+                </v-col>
+                <v-col cols="3" class="text-end py-0">
+                    <v-btn icon="mdi-menu-right" variant="flat" @click="changeMonth(1)" color="primary">
+                    </v-btn>
+                </v-col>
+            </v-row>
+            <v-row class="text-center">
                 <v-col>
-                    <h2 class="text-h5">總資產</h2>
-                    <h2 class="text-h4 font-weight-regular">wewreth</h2>
+                    收入<h2>{{ displayBalance(incomeSum) }}</h2>
+                </v-col>
+                <v-col>
+                    支出<h2>{{ displayBalance(spendSum) }}</h2>
+                </v-col>
+                <v-col>
+                    本月合計<h2>{{ displayBalance(incomeSum - spendSum) }}</h2>
                 </v-col>
             </v-row>
         </v-card-text>
