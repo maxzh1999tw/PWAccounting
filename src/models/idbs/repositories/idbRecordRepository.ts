@@ -14,10 +14,15 @@ export class IdbRecordRepository implements RecordRepository {
     }
 
     async addAsync(record: Record): Promise<void> {
+        delete record.id;
         await (await this.db).add(StoreName.Records, record);
     }
 
     async updateAsync(record: Record): Promise<void> {
         await (await this.db).put(StoreName.Records, record);
+    }
+
+    async getByIdAsync(id: number): Promise<Record | undefined> {
+        return await (await this.db).get(StoreName.Records, id);
     }
 }

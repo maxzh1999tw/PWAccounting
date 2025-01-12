@@ -8,6 +8,7 @@ import EditRecordDialog from '@/components/record/EditRecordDialog.vue';
 import emitter from '@/eventBus';
 import { getAccountRepository, getRecordCategoryRepository, getRecordRepository } from '@/models/injection';
 import { RecordTypeEnum, type Record } from '@/models/domain/accounting/record'
+import { SyncAccountBalancePolicy } from '@/models/domain/accounting/syncAccountBalancePolicy';
 
 // ==========================
 // ===== 頁面設定與初始化 =====
@@ -85,6 +86,7 @@ function handleRecordClick(record: Record) {
 }
 
 async function onRecordSaved(record: Record) {
+    await new SyncAccountBalancePolicy().onRecordUpdatingAsync(toRaw(record));
     await recordRepository.updateAsync(toRaw(record));
 }
 

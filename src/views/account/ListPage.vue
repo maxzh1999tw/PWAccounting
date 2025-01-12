@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { router } from '@/router';
@@ -7,12 +7,17 @@ import { displayBalance } from '@/helpers/amountHelper';
 import { CurrencyEnum, type Account } from '@/models/domain/accounting/account';
 import currencyExchang from '@/models/domain/accounting/currencyExchang';
 import { getAccountRepository } from '@/models/injection';
+import emitter from '@/eventBus';
 
 
 const page = ref({ title: '帳戶管理' });
 const accountRepository = getAccountRepository();
 
 let accounts = ref(await accountRepository.getAllAsync());
+
+async function refreshList() {
+    accounts.value = await accountRepository.getAllAsync();
+}
 
 function handleAddClick() {
     router.push('/account/add');
@@ -40,6 +45,12 @@ const totalAssets = computed(() => {
 
     return assets.reduce((a, b) => Number(a) + Number(b));
 })
+
+// ==============================
+// ===== 新紀錄事件(全局事件) =====
+// ==============================
+onMounted(() => emitter.on('new-record-added', refreshList));
+onUnmounted(() => emitter.off('new-record-added', refreshList));
 
 </script>
 

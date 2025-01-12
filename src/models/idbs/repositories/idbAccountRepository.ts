@@ -11,6 +11,7 @@ export class IdbAccountRepository implements AccountRepository {
     }
 
     async addAsync(account: Account): Promise<void> {
+        delete account.id;
         await (await this.db).add(StoreName.Accounts, account);
     }
 

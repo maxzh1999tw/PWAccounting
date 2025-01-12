@@ -7,6 +7,7 @@ import TransferRecordEditForm from "./TransferRecordEditForm.vue";
 import emitter from "@/eventBus";
 import { getAccountRepository, getRecordCategoryRepository, getRecordRepository } from "@/models/injection";
 import { Record, RecordTypeEnum } from "@/models/domain/accounting/record";
+import { SyncAccountBalancePolicy } from "@/models/domain/accounting/syncAccountBalancePolicy";
 const props = defineProps<{
     modelValue: boolean;
 }>();
@@ -67,6 +68,7 @@ async function save() {
 
     var recordRepository = getRecordRepository();
     await recordRepository.addAsync(toRaw(record));
+    await new SyncAccountBalancePolicy().onNewRecordAddedAsync(toRaw(record));
     emit('update:modelValue', false);
     emitter.emit('new-record-added');
 }
