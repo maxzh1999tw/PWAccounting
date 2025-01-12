@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, toRaw } from 'vue';
-import { useAccountsStore } from '@/stores/accounts';
 import Swal from 'sweetalert2';
 import { router } from '@/router';
 import { useRoute } from 'vue-router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import EditForm from '../../components/account/AccountEditForm.vue';
+import { getAccountRepository } from '@/models/injection';
 
 const page = ref({ title: '編輯帳戶' });
 const breadcrumbs = ref([
@@ -22,14 +22,21 @@ const breadcrumbs = ref([
     }
 ]);
 
-const accountsStore = useAccountsStore();
-
+const accountRepository = getAccountRepository();
 const route = useRoute();
-const accountId = route.params.id;
+const accountId = Number(route.params.id);
+if (isNaN(accountId)) {
+    Swal.fire({
+        text: "無效的帳戶ID",
+        icon: "error",
+    }).then(() => {
+        router.push('/account');
+    });
+    throw new Error("Invalid account ID");
+}
 
-const accounts = await accountsStore.getAll();
-var modelIndex = accounts.findIndex(x => x?.id?.toString() === accountId);
-if (modelIndex == -1) {
+const account = await accountRepository.getByIdAsync(accountId);
+if (!account) {
     Swal.fire({
         text: "找不到帳戶",
         icon: "error",
@@ -38,12 +45,12 @@ if (modelIndex == -1) {
     });
 }
 
-var model = ref(accounts[modelIndex]);
+var model = ref(account!);
 var loading = ref(false);
 
 async function submit() {
     loading.value = true;
-    await accountsStore.updateAccount(toRaw(model.value));
+    await accountRepository.updateAsync(toRaw(model.value));
     loading.value = false;
     await Swal.fire({
         text: "儲存成功",

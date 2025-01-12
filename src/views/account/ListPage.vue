@@ -2,17 +2,17 @@
 import { computed, ref } from 'vue';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { CurrencyEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import { router } from '@/router';
-import { useAccountsStore } from '@/stores/accounts';
-import currencyExchang from '@/models/accounting/currencyExchang';
 import { displayBalance } from '@/helpers/amountHelper';
+import { CurrencyEnum, type Account } from '@/models/domain/accounting/account';
+import currencyExchang from '@/models/domain/accounting/currencyExchang';
+import { getAccountRepository } from '@/models/injection';
 
 
 const page = ref({ title: '帳戶管理' });
-const accountsStore = useAccountsStore();
+const accountRepository = getAccountRepository();
 
-let accounts = ref(await accountsStore.getAll());
+let accounts = ref(await accountRepository.getAllAsync());
 
 function handleAddClick() {
     router.push('/account/add');

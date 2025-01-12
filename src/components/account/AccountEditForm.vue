@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { Account, AccountTypeEnum, CurrencyEnum } from '@/models/domain/accounting/account';
 import { ref } from 'vue';
-import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 
 const props = defineProps<{
     model: Account;

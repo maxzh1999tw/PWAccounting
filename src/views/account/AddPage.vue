@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, toRaw } from 'vue';
-import { useAccountsStore } from '@/stores/accounts';
 import Swal from 'sweetalert2';
 import { router } from '@/router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { CurrencyEnum, AccountTypeEnum, type Account } from '@/types/mainTypes/AccountingTypes';
 import EditForm from '../../components/account/AccountEditForm.vue';
+import { getAccountRepository } from '@/models/injection';
+import { Account, AccountTypeEnum, CurrencyEnum } from '@/models/domain/accounting/account';
 
 const page = ref({ title: '新增帳戶' });
 const breadcrumbs = ref([
@@ -22,21 +22,13 @@ const breadcrumbs = ref([
     }
 ]);
 
-const accountStore = useAccountsStore();
-
-var model = ref({
-    name: "",
-    type: AccountTypeEnum.General,
-    balance: 0,
-    currency: CurrencyEnum.NTD,
-    memo: undefined,
-} as Account);
-
+const accountRepository = getAccountRepository();
+var model = ref(new Account("", AccountTypeEnum.General, 0, CurrencyEnum.NTD));
 var loading = ref(false);
 
 async function submit() {
     loading.value = true;
-    await accountStore.addAccount(toRaw(model.value));
+    await accountRepository.addAsync(toRaw(model.value));
     loading.value = false;
     await Swal.fire({
         text: "儲存成功",
