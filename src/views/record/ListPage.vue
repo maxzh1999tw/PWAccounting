@@ -1,36 +1,35 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, toRaw, useTemplateRef, watch } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
-import { useRecordCategoriesStore, useRecordsStore } from '@/stores/records';
 import { AddMonth, formatDate, getDateOnly, isSameDay } from '@/helpers/dateHelper';
 import { displayBalance } from '@/helpers/amountHelper';
 import { distinct } from '@/helpers/arrayHelper';
-import { useAccountsStore } from '@/stores/accounts';
 import EditRecordDialog from '@/components/record/EditRecordDialog.vue';
 import emitter from '@/eventBus';
+import { getAccountRepository, getRecordCategoryRepository, getRecordRepository } from '@/models/injection';
+import { RecordTypeEnum, type Record } from '@/models/domain/accounting/record'
 
 // ==========================
 // ===== 頁面設定與初始化 =====
 // ==========================
 const page = ref({ title: '紀錄管理' });
-const recordsStore = useRecordsStore();
+const recordRepository = getRecordRepository();
 
-const categoriesStore = useRecordCategoriesStore();
-const categories = await categoriesStore.getAll();
+const categoryRepository = getRecordCategoryRepository();
+const categories = await categoryRepository.getAllAsync();
 
-const accountStore = useAccountsStore();
-const accounts = await accountStore.getAll();
+const accountRepository = getAccountRepository();
+const accounts = await accountRepository.getAllAsync();
 
 // ===================
 // ===== 紀錄列表 =====
 // ===================
 const month = ref(new Date());
-const monthRecords = ref(await recordsStore.getMonthRecords(month.value))
+const monthRecords = ref(await recordRepository.getMonthRecordsAsync(month.value))
 watch(month, refreshList);
 
 async function refreshList() {
-    monthRecords.value = await recordsStore.getMonthRecords(month.value);
+    monthRecords.value = await recordRepository.getMonthRecordsAsync(month.value);
 }
 
 const recordGroupByDate = computed(() => {
@@ -86,7 +85,7 @@ function handleRecordClick(record: Record) {
 }
 
 async function onRecordSaved(record: Record) {
-    await recordsStore.updateRecord(toRaw(record));
+    await recordRepository.updateAsync(toRaw(record));
 }
 
 // ==============================
@@ -154,7 +153,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-primary">{{
                                     displayBalance(record.amount)
-                                    }}</v-col>
+                                }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
@@ -167,7 +166,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-secondary">{{
                                     displayBalance(record.amount)
-                                    }}</v-col>
+                                }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>

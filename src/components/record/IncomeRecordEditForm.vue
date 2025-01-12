@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue';
-import { RecordTypeEnum, type Record } from '@/types/mainTypes/AccountingTypes';
-import { useRecordCategoriesStore } from '@/stores/records';
-import { useAccountsStore } from '@/stores/accounts';
 import DateTimePickerTab from './dateTimePickerTab.vue';
 import { formatDate } from '@/helpers/dateHelper';
+import { Record, RecordTypeEnum } from '@/models/domain/accounting/record';
+import { getAccountRepository, getRecordCategoryRepository } from '@/models/injection';
 
 const props = defineProps<{
     modelValue: Record;
@@ -13,11 +12,11 @@ const props = defineProps<{
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
 const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YYYY-MM-DD  HH : mm"))
 
-const accountsStore = useAccountsStore();
-const accounts = await accountsStore.getAll();
+const accountRepository = getAccountRepository();
+const accounts = await accountRepository.getAllAsync();
 
-const recordCategorysStore = useRecordCategoriesStore();
-const categories = await recordCategorysStore.getCatigoriesByRecordType(RecordTypeEnum.Income);
+const recordCategoryRepository = getRecordCategoryRepository();
+const categories = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Income);
 </script>
 
 <template>

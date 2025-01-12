@@ -1,14 +1,9 @@
-import {
-    AccountTypeEnum,
-    CurrencyEnum,
-    RecordTypeEnum,
-    type Account,
-    type Record,
-    type RecordCategory
-} from '@/types/mainTypes/AccountingTypes';
 import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb';
 import { StoreName } from '../names';
 import { nameof } from 'ts-simple-nameof';
+import { Account, AccountTypeEnum, CurrencyEnum } from '@/models/domain/accounting/account';
+import { Record, RecordTypeEnum } from '@/models/domain/accounting/record';
+import { RecordCategory } from '@/models/domain/accounting/recordCategory';
 
 export default function (
     database: IDBPDatabase<unknown>,

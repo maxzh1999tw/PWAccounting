@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, toRaw, watch } from "vue";
+import { ref } from "vue";
 import { XIcon } from "vue-tabler-icons"
 import SpendRecordEditForm from "./SpendRecordEditForm.vue";
-import { getNewSpendRecord, RecordTypeEnum, type Record } from "@/types/mainTypes/AccountingTypes";
 import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
+import { Record, RecordTypeEnum } from "@/models/domain/accounting/record";
 
-const record = ref(getNewSpendRecord(undefined, undefined));
+const record = ref(Record.getNewSpendRecord(undefined, undefined));
 
 defineExpose({
     openDialog,

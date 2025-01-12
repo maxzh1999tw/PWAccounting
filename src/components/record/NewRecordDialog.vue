@@ -2,50 +2,51 @@
 import { ref, toRaw, watch } from "vue";
 import { XIcon } from "vue-tabler-icons"
 import SpendRecordEditForm from "./SpendRecordEditForm.vue";
-import { getNewIncomeRecord, getNewSpendRecord, getNewTransferRecord, RecordTypeEnum, type Record } from "@/types/mainTypes/AccountingTypes";
 import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
-import { useRecordCategoriesStore, useRecordsStore } from "@/stores/records";
-import { useAccountsStore } from "@/stores/accounts";
 import emitter from "@/eventBus";
+import { getAccountRepository, getRecordCategoryRepository, getRecordRepository } from "@/models/injection";
+import { Record, RecordTypeEnum } from "@/models/domain/accounting/record";
 const props = defineProps<{
     modelValue: boolean;
 }>();
 
-const accountList = await useAccountsStore().getAll();
+const accountRepository = getAccountRepository();
+const accountList = await accountRepository.getAllAsync();
 const firstAccountId = accountList.length >= 1 ? accountList[0].id : undefined;
 const secondAccountId = accountList.length >= 2 ? accountList[1].id : firstAccountId;
 
-const spendCategoryList = await useRecordCategoriesStore().getCatigoriesByRecordType(RecordTypeEnum.Spend);
+const recordCategoryRepository = getRecordCategoryRepository();
+const spendCategoryList = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Spend);
 const firstSpendCategoryId = spendCategoryList.length >= 1 ? spendCategoryList[0].id : undefined;
-const incomeCategoryList = await useRecordCategoriesStore().getCatigoriesByRecordType(RecordTypeEnum.Income);
+const incomeCategoryList = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Income);
 const firstIncomeCategoryId = incomeCategoryList.length >= 1 ? incomeCategoryList[0].id : undefined;
 
 watch(() => props.modelValue, () => {
     if (props.modelValue) {
-        spendRecord.value = getNewSpendRecord(firstSpendCategoryId, firstAccountId);
+        spendRecord.value = Record.getNewSpendRecord(firstSpendCategoryId, firstAccountId);
     }
 })
 
 const emit = defineEmits(['update:modelValue', 'submit']);
-const spendRecord = ref(getNewSpendRecord(firstSpendCategoryId, firstAccountId));
+const spendRecord = ref(Record.getNewSpendRecord(firstSpendCategoryId, firstAccountId));
 
-const incomeRecord = ref(getNewIncomeRecord(firstIncomeCategoryId, firstAccountId));
+const incomeRecord = ref(Record.getNewIncomeRecord(firstIncomeCategoryId, firstAccountId));
 
-const transferRecord = ref(getNewTransferRecord(firstAccountId, secondAccountId));
+const transferRecord = ref(Record.getNewTransferRecord(firstAccountId, secondAccountId));
 
 const typeTab = ref(RecordTypeEnum.Spend)
 
 watch(typeTab, () => {
     switch (typeTab.value) {
         case RecordTypeEnum.Spend:
-            spendRecord.value = getNewSpendRecord(firstSpendCategoryId, firstAccountId);
+            spendRecord.value = Record.getNewSpendRecord(firstSpendCategoryId, firstAccountId);
             break;
         case RecordTypeEnum.Income:
-            incomeRecord.value = getNewIncomeRecord(firstIncomeCategoryId, firstAccountId);
+            incomeRecord.value = Record.getNewIncomeRecord(firstIncomeCategoryId, firstAccountId);
             break;
         case RecordTypeEnum.Transfer:
-            transferRecord.value = getNewTransferRecord(firstAccountId, secondAccountId);
+            transferRecord.value = Record.getNewTransferRecord(firstAccountId, secondAccountId);
             break;
     }
 })
@@ -64,8 +65,8 @@ async function save() {
             break;
     }
 
-    var recordsStore = useRecordsStore();
-    await recordsStore.addRecord(toRaw(record));
+    var recordRepository = getRecordRepository();
+    await recordRepository.addAsync(toRaw(record));
     emit('update:modelValue', false);
     emitter.emit('new-record-added');
 }
