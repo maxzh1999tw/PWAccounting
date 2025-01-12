@@ -1,4 +1,4 @@
-import type { CurrencyEnum } from '@/types/mainTypes/AccountingTypes';
+import type { CurrencyEnum } from './account';
 
 interface AmountWithCurrency {
     amount: number;
