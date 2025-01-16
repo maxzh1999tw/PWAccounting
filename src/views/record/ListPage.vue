@@ -155,7 +155,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-primary">{{
                                     displayBalance(record.amount)
-                                }}</v-col>
+                                    }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
@@ -168,7 +168,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-secondary">{{
                                     displayBalance(record.amount)
-                                }}</v-col>
+                                    }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>

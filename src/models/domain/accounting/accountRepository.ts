@@ -5,4 +5,5 @@ export interface AccountRepository {
     addAsync(account: Account): Promise<void>;
     getByIdAsync(id: number): Promise<Account | undefined>;
     updateAsync(account: Account): Promise<void>;
+    deleteAsync(id: number): Promise<void>;
 }

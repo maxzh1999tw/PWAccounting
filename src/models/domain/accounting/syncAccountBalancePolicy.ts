@@ -1,6 +1,5 @@
 import { getAccountRepository, getRecordRepository } from '@/models/injection';
 import { Record, RecordTypeEnum } from '@/models/domain/accounting/record';
-import { el } from 'vuetify/lib/locale/index.mjs';
 
 export class SyncAccountBalancePolicy {
     private accountRepository = getAccountRepository();
@@ -38,40 +37,38 @@ export class SyncAccountBalancePolicy {
         if (!oldRecord) {
             throw new Error('Old record not found');
         }
-        console.log('oldRecord', oldRecord);
 
         let account = await this.accountRepository.getByIdAsync(newRecord.accountId!);
-        if (!account) {
-            throw new Error('Account not found');
-        }
-        console.log('account', account);
 
-        if (oldRecord!.recordType == RecordTypeEnum.Spend) {
+        if (account && oldRecord!.recordType == RecordTypeEnum.Spend) {
             account.balance += oldRecord.amount;
             account.balance -= newRecord.amount;
-        } else if (oldRecord.recordType == RecordTypeEnum.Income) {
+        } else if (account && oldRecord.recordType == RecordTypeEnum.Income) {
             account.balance -= oldRecord.amount;
             account.balance += newRecord.amount;
         } else if (oldRecord.recordType == RecordTypeEnum.Transfer) {
             let oldToAccount = await this.accountRepository.getByIdAsync(oldRecord.toAccountId!);
-            if (!oldToAccount) {
-                throw new Error('Old toAccount not found');
+
+            if (account) {
+                account.balance += oldRecord.amount;
+                account.balance -= newRecord.amount;
             }
-            account.balance += oldRecord.amount;
-            oldToAccount.balance -= oldRecord.amount;
-            await this.accountRepository.updateAsync(oldToAccount);
+            if (oldToAccount) {
+                oldToAccount.balance -= oldRecord.amount;
+                await this.accountRepository.updateAsync(oldToAccount);
+            }
+
             let newToAccount = await this.accountRepository.getByIdAsync(newRecord.toAccountId!);
             if (!newToAccount) {
                 throw new Error('New toAccount not found');
             }
-            account.balance -= newRecord.amount;
             newToAccount.balance += newRecord.amount;
             await this.accountRepository.updateAsync(newToAccount);
-        } else {
-            throw new Error('Old RecordType not found');
         }
 
-        await this.accountRepository.updateAsync(account);
+        if (account) {
+            await this.accountRepository.updateAsync(account);
+        }
     }
 
     async onRecordRemovedAsync(record: Record) {

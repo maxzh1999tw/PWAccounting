@@ -7,6 +7,7 @@ import { useRoute } from 'vue-router';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import EditForm from './_AccountEditForm.vue';
 import { getAccountRepository } from '@/models/injection';
+import { TrashIcon } from 'vue-tabler-icons';
 
 const page = ref({ title: '編輯帳戶' });
 const breadcrumbs = ref([
@@ -58,6 +59,33 @@ async function submit() {
     });
     router.push('/account');
 }
+
+async function deleteAccount() {
+    if (!model.value?.id) {
+        return;
+    }
+
+    let result = await Swal.fire({
+        title: "你確定要刪除此帳號嗎？",
+        text: "關於此帳號的紀錄會顯示為未知帳號",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "刪除",
+        cancelButtonText: "取消"
+    });
+
+    if (!result.isConfirmed) {
+        return;
+    }
+
+    loading.value = true;
+    await accountRepository.deleteAsync(toRaw(model.value.id));
+    await Swal.fire({
+        text: "刪除成功",
+        icon: "success",
+    });
+    router.push('/account');
+}
 </script>
 
 <template>
@@ -66,6 +94,11 @@ async function submit() {
         <v-col cols="12" md="12">
             <v-card elevation="10" :loading="loading">
                 <v-card-item>
+                    <div class="w-100 text-end">
+                        <v-btn color="primary" variant="outlined" @click="deleteAccount()" :disabled="loading">
+                            <TrashIcon />
+                        </v-btn>
+                    </div>
                     <EditForm :model="model" @submit="submit">
                         <template #toolBarBottom>
                             <v-row class="mt-5">
