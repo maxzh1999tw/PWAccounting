@@ -9,6 +9,7 @@ import emitter from '@/eventBus';
 import { getAccountRepository, getRecordCategoryRepository, getRecordRepository } from '@/models/injection';
 import { RecordTypeEnum, type Record } from '@/models/domain/accounting/record'
 import { SyncAccountBalancePolicy } from '@/models/domain/accounting/syncAccountBalancePolicy';
+import Swal from 'sweetalert2';
 
 // ==========================
 // ===== 頁面設定與初始化 =====
@@ -21,6 +22,16 @@ const categories = await categoryRepository.getAllAsync();
 
 const accountRepository = getAccountRepository();
 const accounts = await accountRepository.getAllAsync();
+
+const snackbar = ref(false);
+const snackbarTxt = ref("");
+
+const menuVisible = ref(false);
+const menuTargetRecord = ref(undefined as (Record | undefined));
+function openFullScreenMenu(record: Record) {
+    menuTargetRecord.value = record;
+    menuVisible.value = true;
+}
 
 // ===================
 // ===== 紀錄列表 =====
@@ -62,6 +73,11 @@ function getRecordAddOn(record: Record): number {
     return record.amount * times;
 }
 
+function fireSnackBar(message: string) {
+    snackbarTxt.value = message;
+    snackbar.value = true;
+}
+
 // =================
 // ===== 統計 ======
 // =================
@@ -82,12 +98,42 @@ const incomeSum = computed(() => {
 // ===================
 const editRecordDialog = useTemplateRef('editRecordDialog')
 function handleRecordClick(record: Record) {
+    if (!accounts.some(a => a.id == record.accountId)
+        || (record.toAccountId != undefined
+            && !accounts.some(a => a.id == record.toAccountId))) {
+        fireSnackBar("相關帳號已被銷毀，無法編輯。");
+        return;
+    }
     editRecordDialog!.value!.openDialog(record);
 }
 
 async function onRecordSaved(record: Record) {
     await new SyncAccountBalancePolicy().onRecordUpdatingAsync(toRaw(record));
     await recordRepository.updateAsync(toRaw(record));
+}
+
+async function handleMenuRemove() {
+    menuVisible.value = false;
+    if (menuTargetRecord?.value?.id) {
+        let result = await Swal.fire({
+            title: "你確定要刪除此筆紀錄嗎？",
+            text: "此動作無法還原，請三思。",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "刪除",
+            cancelButtonText: "取消"
+        });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        await recordRepository.removeAsync(menuTargetRecord.value.id);
+
+        refreshList();
+        fireSnackBar("已刪除一筆紀錄。");
+    }
+
 }
 
 // ==============================
@@ -145,7 +191,8 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
 
                 <v-divider class="border-opacity-75"></v-divider>
 
-                <div v-for="(record) in dateGroup.records" :key="record.id">
+                <div v-for="(record) in dateGroup.records" :key="record.id"
+                    @contextmenu.prevent="openFullScreenMenu(record)">
                     <v-list-item v-if="record.recordType == RecordTypeEnum.Spend" class="py-3"
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
@@ -177,7 +224,8 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
                                 <v-col cols="2">{{ accounts.find(x => x.id == record.accountId)?.name }}</v-col>
-                                <v-col cols="3">轉至{{ accounts.find(x => x.id == record.toAccountId)?.name }}</v-col>
+                                <v-col cols="3">轉至{{ accounts.find(x => x.id == record.toAccountId)?.name ?? "已刪除帳號"
+                                    }}</v-col>
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end">{{ displayBalance(record.amount)
                                     }}</v-col>
@@ -192,5 +240,22 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
         </v-list>
     </v-card>
 
-    <edit-record-dialog @onSave="onRecordSaved" ref="editRecordDialog"></edit-record-dialog>
+    <edit-record-dialog :accounts="accounts" @onSave="onRecordSaved" ref="editRecordDialog"></edit-record-dialog>
+
+    <v-snackbar v-model="snackbar" :timeout="2000" @click="snackbar = false">
+        {{ snackbarTxt }}
+    </v-snackbar>
+
+    <!-- 全畫面選單 -->
+    <v-dialog v-model="menuVisible">
+        <v-card>
+            <v-card-text>
+                <v-list>
+                    <v-list-item @click="handleMenuRemove()">
+                        刪除
+                    </v-list-item>
+                </v-list>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>

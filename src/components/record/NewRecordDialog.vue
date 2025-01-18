@@ -13,9 +13,9 @@ const props = defineProps<{
 }>();
 
 const accountRepository = getAccountRepository();
-const accountList = await accountRepository.getAllAsync();
-const firstAccountId = accountList.length >= 1 ? accountList[0].id : undefined;
-const secondAccountId = accountList.length >= 2 ? accountList[1].id : firstAccountId;
+const accounts = await accountRepository.getAllAsync();
+const firstAccountId = accounts.length >= 1 ? accounts[0].id : undefined;
+const secondAccountId = accounts.length >= 2 ? accounts[1].id : firstAccountId;
 
 const recordCategoryRepository = getRecordCategoryRepository();
 const spendCategoryList = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Spend);
@@ -95,15 +95,16 @@ async function save() {
                 <v-card-item>
                     <v-tabs-window v-model="typeTab">
                         <v-tabs-window-item :value="RecordTypeEnum.Spend">
-                            <SpendRecordEditForm v-model="spendRecord"></SpendRecordEditForm>
+                            <SpendRecordEditForm :accounts="accounts" v-model="spendRecord"></SpendRecordEditForm>
                         </v-tabs-window-item>
 
                         <v-tabs-window-item :value="RecordTypeEnum.Income">
-                            <IncomeRecordEditForm v-model="incomeRecord"></IncomeRecordEditForm>
+                            <IncomeRecordEditForm :accounts="accounts" v-model="incomeRecord"></IncomeRecordEditForm>
                         </v-tabs-window-item>
 
                         <v-tabs-window-item :value="RecordTypeEnum.Transfer">
-                            <TransferRecordEditForm v-model="transferRecord"></TransferRecordEditForm>
+                            <TransferRecordEditForm :accounts="accounts" v-model="transferRecord">
+                            </TransferRecordEditForm>
                         </v-tabs-window-item>
                     </v-tabs-window>
                 </v-card-item>

@@ -5,12 +5,17 @@ import SpendRecordEditForm from "./SpendRecordEditForm.vue";
 import IncomeRecordEditForm from "./IncomeRecordEditForm.vue";
 import TransferRecordEditForm from "./TransferRecordEditForm.vue";
 import { Record, RecordTypeEnum } from "@/models/domain/accounting/record";
+import type { Account } from "@/models/domain/accounting/account";
 
 const record = ref(Record.getNewSpendRecord(undefined, undefined));
 
 defineExpose({
     openDialog,
 });
+
+const props = defineProps<{
+    accounts: Account[],
+}>();
 
 const open = ref(false);
 
@@ -43,13 +48,16 @@ function openDialog(editingRecord: Record) {
                     </v-toolbar-items>
                 </v-toolbar>
                 <v-card-item>
-                    <SpendRecordEditForm v-model="record" v-if="record.recordType == RecordTypeEnum.Spend">
+                    <SpendRecordEditForm v-model="record" :accounts="accounts"
+                        v-if="record.recordType == RecordTypeEnum.Spend">
                     </SpendRecordEditForm>
 
-                    <IncomeRecordEditForm v-model="record" v-if="record.recordType == RecordTypeEnum.Income">
+                    <IncomeRecordEditForm v-model="record" :accounts="accounts"
+                        v-if="record.recordType == RecordTypeEnum.Income">
                     </IncomeRecordEditForm>
 
-                    <TransferRecordEditForm v-model="record" v-if="record.recordType == RecordTypeEnum.Transfer">
+                    <TransferRecordEditForm v-model="record" :accounts="accounts"
+                        v-if="record.recordType == RecordTypeEnum.Transfer">
                     </TransferRecordEditForm>
                 </v-card-item>
 

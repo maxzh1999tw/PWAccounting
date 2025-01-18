@@ -3,17 +3,16 @@ import { computed, useTemplateRef } from 'vue';
 import DateTimePickerTab from './dateTimePickerTab.vue';
 import { formatDate } from '@/helpers/dateHelper';
 import { Record, RecordTypeEnum } from '@/models/domain/accounting/record';
-import { getAccountRepository, getRecordCategoryRepository } from '@/models/injection';
+import { getRecordCategoryRepository } from '@/models/injection';
+import type { Account } from '@/models/domain/accounting/account';
 
 const props = defineProps<{
-    modelValue: Record;
+    modelValue: Record,
+    accounts: Account[],
 }>();
 
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
 const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YYYY-MM-DD  HH : mm"))
-
-const accountRepository = getAccountRepository();
-const accounts = await accountRepository.getAllAsync();
 
 const recordCategoryRepository = getRecordCategoryRepository();
 const categories = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Income);

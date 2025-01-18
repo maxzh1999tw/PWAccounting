@@ -25,4 +25,8 @@ export class IdbRecordRepository implements RecordRepository {
     async getByIdAsync(id: number): Promise<Record | undefined> {
         return await (await this.db).get(StoreName.Records, id);
     }
+
+    async removeAsync(id: number): Promise<void> {
+        await (await this.db).delete(StoreName.Records, id);
+    }
 }
