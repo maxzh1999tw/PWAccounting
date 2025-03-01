@@ -25,6 +25,21 @@ const MainRoutes = {
             name: '編輯帳戶',
             path: '/Account/edit/:id',
             component: () => import('@/views/account/EditPage.vue')
+        },
+        {
+            name: '記帳類別管理',
+            path: '/RecordCategory',
+            component: () => import('@/views/recordCategory/ListPage.vue')
+        },
+        {
+            name: '新增記帳類別',
+            path: '/RecordCategory/add',
+            component: () => import('@/views/recordCategory/AddPage.vue')
+        },
+        {
+            name: '編輯記帳類別',
+            path: '/RecordCategory/edit/:id',
+            component: () => import('@/views/recordCategory/EditPage.vue')
         }
     ]
 };

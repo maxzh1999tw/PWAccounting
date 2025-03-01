@@ -7,7 +7,8 @@ import {
     StarIcon,
     AwardIcon,
     WalletIcon,
-    ReportMoneyIcon
+    ReportMoneyIcon,
+    CategoryIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -37,6 +38,11 @@ const sidebarItem: menu[] = [
         title: '帳戶管理',
         icon: WalletIcon,
         to: '/account'
+    },
+    {
+        title: '記帳類別管理',
+        icon: CategoryIcon,
+        to: '/recordCategory'
     }
 ];
 

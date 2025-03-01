@@ -53,26 +53,22 @@ function addRecordCategoriesStore(database: IDBPDatabase<unknown>): void {
 
     recordCategoriesStore.add({
         name: '飲食',
-        recordType: RecordTypeEnum.Spend,
-        isActive: true
+        recordType: RecordTypeEnum.Spend
     } as RecordCategory);
 
     recordCategoriesStore.add({
         name: '生活',
-        recordType: RecordTypeEnum.Spend,
-        isActive: true
+        recordType: RecordTypeEnum.Spend
     });
 
     recordCategoriesStore.add({
         name: '薪資',
-        recordType: RecordTypeEnum.Income,
-        isActive: true
+        recordType: RecordTypeEnum.Income
     });
 
     recordCategoriesStore.add({
         name: '投資',
-        recordType: RecordTypeEnum.Income,
-        isActive: true
+        recordType: RecordTypeEnum.Income
     });
 
     const propertyName = nameof<RecordCategory>((x) => x.recordType);
