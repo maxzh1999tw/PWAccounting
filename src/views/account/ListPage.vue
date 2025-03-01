@@ -19,12 +19,12 @@ async function refreshList() {
     accounts.value = await accountRepository.getAllAsync();
 }
 
-function handleAddClick() {
-    router.push('/account/add');
+async function handleAddClick() {
+    console.log(await router.push('/account/add'));
 }
 
-function handleAccountClick(selection: Account) {
-    router.push(`/account/edit/${selection.id}`);
+async function handleAccountClick(selection: Account) {
+    console.log(await router.push(`/account/edit/${selection.id}`));
 }
 
 const totalAssets = computed(() => {

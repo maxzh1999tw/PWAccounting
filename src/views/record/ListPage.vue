@@ -197,8 +197,8 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
-                                <v-col cols="2">{{ accounts.find(x => x.id == record.accountId)?.name }}</v-col>
-                                <v-col cols="3">{{ categories.find(x => x.id == record.categoryId)?.name }}</v-col>
+                                <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
+                                <v-col cols="3">{{categories.find(x => x.id == record.categoryId)?.name}}</v-col>
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-primary">{{
                                     displayBalance(record.amount)
@@ -210,8 +210,8 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
-                                <v-col cols="2">{{ accounts.find(x => x.id == record.accountId)?.name }}</v-col>
-                                <v-col cols="3">{{ categories.find(x => x.id == record.categoryId)?.name }}</v-col>
+                                <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
+                                <v-col cols="3">{{categories.find(x => x.id == record.categoryId)?.name}}</v-col>
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-secondary">{{
                                     displayBalance(record.amount)
@@ -223,8 +223,8 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
-                                <v-col cols="2">{{ accounts.find(x => x.id == record.accountId)?.name }}</v-col>
-                                <v-col cols="3">轉至{{ accounts.find(x => x.id == record.toAccountId)?.name ?? "已刪除帳號"
+                                <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
+                                <v-col cols="3">轉至{{accounts.find(x => x.id == record.toAccountId)?.name ?? "已刪除帳號"
                                     }}</v-col>
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end">{{ displayBalance(record.amount)
