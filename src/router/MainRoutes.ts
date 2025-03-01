@@ -40,6 +40,11 @@ const MainRoutes = {
             name: '編輯記帳類別',
             path: '/RecordCategory/edit/:id',
             component: () => import('@/views/recordCategory/EditPage.vue')
+        },
+        {
+            name: '設定',
+            path: '/Setting',
+            component: () => import('@/views/setting/settingPage.vue')
         }
     ]
 };

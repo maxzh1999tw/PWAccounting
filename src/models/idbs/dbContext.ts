@@ -2,7 +2,7 @@ import { openDB, type IDBPDatabase, type IDBPTransaction } from 'idb';
 import versionUpgrader_0 from './versionUpgraders/versionUpgrader_0';
 
 /** 資料庫名稱 */
-const dbName = 'PWAccountingV1';
+export const dbName = 'PWAccountingV1';
 /** 資料庫版本 */
 const lastVersion = 1;
 
