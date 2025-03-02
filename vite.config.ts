@@ -9,7 +9,7 @@ const DRIVE_LETTER_REGEX = /^[a-z]:/i;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: '/PWAccounting/',
+    base: 'maxzh1999tw.github.io/PWAccounting/',
     plugins: [
         vue(),
         vuetify({
