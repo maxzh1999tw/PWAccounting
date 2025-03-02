@@ -11,10 +11,6 @@ import 'vue3-carousel/dist/carousel.css';
 
 import Maska from 'maska';
 // print
-// import print from 'vue3-print-nb';
-// Table
-import Vue3EasyDataTable from 'vue3-easy-data-table';
-import 'vue3-easy-data-table/dist/style.css';
 //i18
 import { createI18n } from 'vue-i18n';
 import messages from '@/utils/locales/messages';
@@ -29,7 +25,6 @@ const i18n = createI18n({
 
 const app = createApp(App);
 app.use(router);
-app.component('EasyDataTable', Vue3EasyDataTable);
 app.use(PerfectScrollbar);
 app.use(createPinia());
 app.use(VueTablerIcons);
