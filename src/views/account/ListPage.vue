@@ -49,8 +49,8 @@ const totalAssets = computed(() => {
 // ==============================
 // ===== 新紀錄事件(全局事件) =====
 // ==============================
-onMounted(() => emitter.on('new-record-added', refreshList));
-onUnmounted(() => emitter.off('new-record-added', refreshList));
+onMounted(() => emitter.on('any-record-change', refreshList));
+onUnmounted(() => emitter.off('any-record-change', refreshList));
 
 </script>
 
@@ -79,7 +79,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                 <v-list-item color="primary" class="py-3" @click="handleAccountClick(account)">
                     <v-list-item-title class="text-subtitle-1">{{ account.name }}</v-list-item-title>
                     <v-list-item-subtitle class="text-subtitle-2 text-high-emphasis">{{ account.memo
-                    }}</v-list-item-subtitle>
+                        }}</v-list-item-subtitle>
                     <template v-slot:append>
                         <v-list-item-subtitle class="text-subtitle-1 text-high-emphasis mr-3"> {{
                             displayBalance(account.balance, account.currency) }}</v-list-item-subtitle>

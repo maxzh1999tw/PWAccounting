@@ -26,6 +26,9 @@ const firstIncomeCategoryId = incomeCategoryList.length >= 1 ? incomeCategoryLis
 watch(() => props.modelValue, () => {
     if (props.modelValue) {
         spendRecord.value = Record.getNewSpendRecord(firstSpendCategoryId, firstAccountId);
+        incomeRecord.value = Record.getNewIncomeRecord(firstIncomeCategoryId, firstAccountId);
+        transferRecord.value = Record.getNewTransferRecord(firstAccountId, secondAccountId);
+        typeTab.value = RecordTypeEnum.Spend;
     }
 })
 
@@ -70,7 +73,7 @@ async function save() {
     await recordRepository.addAsync(toRaw(record));
     await new SyncAccountBalancePolicy().onNewRecordAddedAsync(toRaw(record));
     emit('update:modelValue', false);
-    emitter.emit('new-record-added');
+    emitter.emit('any-record-change');
 }
 </script>
 

@@ -110,6 +110,7 @@ function handleRecordClick(record: Record) {
 async function onRecordSaved(record: Record) {
     await new SyncAccountBalancePolicy().onRecordUpdatingAsync(toRaw(record));
     await recordRepository.updateAsync(toRaw(record));
+    refreshList();
 }
 
 async function handleMenuRemove() {
@@ -139,8 +140,8 @@ async function handleMenuRemove() {
 // ==============================
 // ===== 新紀錄事件(全局事件) =====
 // ==============================
-onMounted(() => emitter.on('new-record-added', refreshList));
-onUnmounted(() => emitter.off('new-record-added', refreshList));
+onMounted(() => emitter.on('any-record-change', refreshList));
+onUnmounted(() => emitter.off('any-record-change', refreshList));
 
 </script>
 
@@ -202,7 +203,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-primary">{{
                                     displayBalance(record.amount)
-                                }}</v-col>
+                                    }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
@@ -215,7 +216,7 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-secondary">{{
                                     displayBalance(record.amount)
-                                }}</v-col>
+                                    }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
@@ -225,10 +226,10 @@ onUnmounted(() => emitter.off('new-record-added', refreshList));
                             <v-row>
                                 <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
                                 <v-col cols="3">轉至{{accounts.find(x => x.id == record.toAccountId)?.name ?? "已刪除帳號"
-                                    }}</v-col>
+                                }}</v-col>
                                 <v-col cols="4">{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end">{{ displayBalance(record.amount)
-                                    }}</v-col>
+                                }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
