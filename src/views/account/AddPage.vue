@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { router } from '@/router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import EditForm from './_AccountEditForm.vue';
+import EditForm from '../../components/account/accountEditForm.vue';
 import { getAccountRepository } from '@/models/injection';
 import { Account, AccountTypeEnum, CurrencyEnum } from '@/models/domain/accounting/account';
 

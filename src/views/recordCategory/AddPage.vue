@@ -5,7 +5,7 @@ import { router } from '@/router';
 import { useRoute } from 'vue-router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import EditForm from './_RecordCategoryEditForm.vue';
+import EditForm from '../../components/recordCategory/recordCategoryEditForm.vue';
 import { getRecordCategoryRepository } from '@/models/injection';
 import { RecordCategory } from '@/models/domain/accounting/recordCategory';
 import { RecordTypeEnum } from '@/models/domain/accounting/record';

@@ -9,7 +9,7 @@ const DRIVE_LETTER_REGEX = /^[a-z]:/i;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: 'maxzh1999tw.github.io/PWAccounting/',
+    base: '/PWAccounting/',
     plugins: [
         vue(),
         vuetify({
@@ -34,7 +34,6 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                // https://github.com/rollup/rollup/blob/master/src/utils/sanitizeFileName.ts
                 sanitizeFileName(name) {
                     const match = DRIVE_LETTER_REGEX.exec(name);
                     const driveLetter = match ? match[0] : '';

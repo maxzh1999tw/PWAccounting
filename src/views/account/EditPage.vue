@@ -5,7 +5,7 @@ import { router } from '@/router';
 import { useRoute } from 'vue-router';
 
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
-import EditForm from './_AccountEditForm.vue';
+import EditForm from '../../components/account/accountEditForm.vue';
 import { getAccountRepository } from '@/models/injection';
 import { TrashIcon } from 'vue-tabler-icons';
 
