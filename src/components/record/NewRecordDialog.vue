@@ -8,6 +8,7 @@ import emitter from "@/eventBus";
 import { getAccountRepository, getRecordCategoryRepository, getRecordRepository } from "@/models/injection";
 import { Record, RecordTypeEnum } from "@/models/domain/accounting/record";
 import { SyncAccountBalancePolicy } from "@/models/domain/accounting/syncAccountBalancePolicy";
+import { router } from "@/router";
 const props = defineProps<{
     modelValue: boolean;
 }>();
@@ -74,6 +75,7 @@ async function save() {
     await new SyncAccountBalancePolicy().onNewRecordAddedAsync(toRaw(record));
     emit('update:modelValue', false);
     emitter.emit('any-record-change');
+    await router.push('/');
 }
 </script>
 

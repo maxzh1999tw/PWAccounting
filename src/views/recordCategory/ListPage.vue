@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { RecordTypeEnum } from '@/models/domain/accounting/record';
 import { getRecordCategoryRepository } from '@/models/injection';
 import type { RecordCategory } from '@/models/domain/accounting/recordCategory';
 import { router } from '@/router';
-const page = ref({ title: '記帳類別管理' });
 const tab = ref(RecordTypeEnum.Spend);
 const recordCategoryRepository = getRecordCategoryRepository();
 const categories = ref(await recordCategoryRepository.getAllAsync());
@@ -22,9 +20,6 @@ function handleAddClick(type: RecordTypeEnum) {
 </script>
 
 <template>
-    <div class="d-flex justify-space-between align-end">
-        <BaseBreadcrumb :title="page.title"></BaseBreadcrumb>
-    </div>
     <v-card elevation="10">
         <v-tabs v-model="tab" color="primary" fixed-tabs>
             <v-tab :value="RecordTypeEnum.Spend">支出</v-tab>

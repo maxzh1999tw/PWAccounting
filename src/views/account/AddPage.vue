@@ -3,24 +3,9 @@ import { ref, toRaw } from 'vue';
 import Swal from 'sweetalert2';
 import { router } from '@/router';
 
-import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import EditForm from '../../components/account/accountEditForm.vue';
 import { getAccountRepository } from '@/models/injection';
 import { Account, AccountTypeEnum, CurrencyEnum } from '@/models/domain/accounting/account';
-
-const page = ref({ title: '新增帳戶' });
-const breadcrumbs = ref([
-    {
-        text: '帳戶管理',
-        disabled: false,
-        href: '/account'
-    },
-    {
-        text: '新增帳戶',
-        disabled: true,
-        href: '#'
-    }
-]);
 
 const accountRepository = getAccountRepository();
 var model = ref(new Account("", AccountTypeEnum.General, 0, CurrencyEnum.NTD));
@@ -39,7 +24,6 @@ async function submit() {
 </script>
 
 <template>
-    <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
     <v-row>
         <v-col cols="12" md="12">
             <v-card elevation="10" :loading="loading">

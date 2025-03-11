@@ -48,7 +48,7 @@ function handleNewRecordDialogOpen() {
             <NewRecordDialog v-model="openNewRecordDialog"></NewRecordDialog>
 
             <v-main>
-                <v-container fluid class="page-wrapper px-0 pb-sm-15 pb-10">
+                <v-container fluid class="page-wrapper px-0 pb-sm-15 pb-10 pt-0">
                     <div :class="customizer.boxed ? 'maxWidth' : ''">
                         <RouterView />
                         <v-btn class="customizer-btn" size="large" icon variant="flat" color="primary"

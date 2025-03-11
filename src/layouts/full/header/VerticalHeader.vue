@@ -7,6 +7,10 @@ import Logo from '../logo/Logo.vue';
 // import LogoIcon from '../logo/LogoIcon.vue'
 import RightMobileSidebar from './RightMobileSidebar.vue';
 import Navigations from './Navigations.vue';
+import { useRoute } from "vue-router";
+import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
+
+const route = useRoute();
 
 const customizer = useCustomizerStore();
 const showSearch = ref(false);
@@ -30,7 +34,7 @@ watch(priority, (newPriority) => {
         <v-btn class="hidden-lg-and-up" icon variant="text" @click.stop="customizer.SET_SIDEBAR_DRAWER" size="small">
             <Menu2Icon size="25" />
         </v-btn>
-
+        <h1 class="h3 ms-2 mt-1">{{ route.name }}</h1>
 
         <v-spacer />
 

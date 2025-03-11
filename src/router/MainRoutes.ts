@@ -7,12 +7,12 @@ const MainRoutes = {
     component: () => import('@/layouts/full/FullLayout.vue'),
     children: [
         {
-            name: '記錄管理',
+            name: '記帳記錄',
             path: '/',
             component: () => import('@/views/record/ListPage.vue')
         },
         {
-            name: '帳戶管理',
+            name: '帳戶',
             path: '/Account',
             component: () => import('@/views/account/ListPage.vue')
         },
@@ -27,7 +27,7 @@ const MainRoutes = {
             component: () => import('@/views/account/EditPage.vue')
         },
         {
-            name: '記帳類別管理',
+            name: '記帳類別',
             path: '/RecordCategory',
             component: () => import('@/views/recordCategory/ListPage.vue')
         },

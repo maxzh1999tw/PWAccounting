@@ -4,24 +4,9 @@ import Swal from 'sweetalert2';
 import { router } from '@/router';
 import { useRoute } from 'vue-router';
 
-import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import EditForm from '../../components/recordCategory/recordCategoryEditForm.vue';
 import { getRecordCategoryRepository } from '@/models/injection';
 import { TrashIcon } from 'vue-tabler-icons';
-
-const page = ref({ title: '編輯記帳類別' });
-const breadcrumbs = ref([
-    {
-        text: '記帳類別管理',
-        disabled: false,
-        href: '/recordCategory'
-    },
-    {
-        text: '編輯記帳類別',
-        disabled: true,
-        href: '#'
-    }
-]);
 
 const recordCategoryRepository = getRecordCategoryRepository();
 const route = useRoute();
@@ -89,7 +74,6 @@ async function deleteRecordCategory() {
 </script>
 
 <template>
-    <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
     <v-row>
         <v-col cols="12" md="12">
             <v-card elevation="10" :loading="loading">

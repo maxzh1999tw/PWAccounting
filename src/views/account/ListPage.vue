@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { router } from '@/router';
 import { displayBalance } from '@/helpers/amountHelper';
 import { CurrencyEnum, type Account } from '@/models/domain/accounting/account';
@@ -55,10 +54,6 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
 </script>
 
 <template>
-    <div class="d-flex justify-space-between align-end">
-        <BaseBreadcrumb :title="page.title"></BaseBreadcrumb>
-
-    </div>
     <v-card elevation="10">
         <v-card-text class="py-4 px-6 text-white bg-primary">
             <v-row>

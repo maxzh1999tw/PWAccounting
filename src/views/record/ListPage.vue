@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, toRaw, useTemplateRef, watch } from 'vue';
-import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import { AddMonth, formatDate, getDateOnly, isSameDay } from '@/helpers/dateHelper';
 import { displayBalance } from '@/helpers/amountHelper';
 import { distinct } from '@/helpers/arrayHelper';
@@ -146,9 +145,6 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
 </script>
 
 <template>
-    <div class="d-flex justify-space-between align-end">
-        <BaseBreadcrumb :title="page.title"></BaseBreadcrumb>
-    </div>
     <v-card elevation="10">
         <v-card-text class="text-white bg-primary pb-4">
             <v-row>
@@ -198,12 +194,12 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
-                                <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
+                                <v-col cols="3">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
                                 <v-col cols="3">{{categories.find(x => x.id == record.categoryId)?.name}}</v-col>
-                                <v-col cols="4">{{ record?.memo }}</v-col>
+                                <v-col>{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-primary">{{
                                     displayBalance(record.amount)
-                                    }}</v-col>
+                                }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
@@ -211,12 +207,12 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
-                                <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
+                                <v-col cols="3">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
                                 <v-col cols="3">{{categories.find(x => x.id == record.categoryId)?.name}}</v-col>
-                                <v-col cols="4">{{ record?.memo }}</v-col>
+                                <v-col>{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end text-secondary">{{
                                     displayBalance(record.amount)
-                                    }}</v-col>
+                                }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
@@ -224,12 +220,12 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
                         @click="handleRecordClick(record)">
                         <v-list-item-title class="text-medium-emphasis">
                             <v-row>
-                                <v-col cols="2">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
+                                <v-col cols="3">{{accounts.find(x => x.id == record.accountId)?.name}}</v-col>
                                 <v-col cols="3">轉至{{accounts.find(x => x.id == record.toAccountId)?.name ?? "已刪除帳號"
-                                }}</v-col>
-                                <v-col cols="4">{{ record?.memo }}</v-col>
+                                    }}</v-col>
+                                <v-col>{{ record?.memo }}</v-col>
                                 <v-col cols="3" class="text-end">{{ displayBalance(record.amount)
-                                }}</v-col>
+                                    }}</v-col>
                             </v-row>
                         </v-list-item-title>
                     </v-list-item>
