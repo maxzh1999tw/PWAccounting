@@ -34,7 +34,7 @@ watch(priority, (newPriority) => {
         <v-btn class="hidden-lg-and-up" icon variant="text" @click.stop="customizer.SET_SIDEBAR_DRAWER" size="small">
             <Menu2Icon size="25" />
         </v-btn>
-        <h1 class="h3 ms-2 mt-1">{{ route.name }}</h1>
+        <h1 class="h3 ms-2">{{ route.name }}</h1>
 
         <v-spacer />
 

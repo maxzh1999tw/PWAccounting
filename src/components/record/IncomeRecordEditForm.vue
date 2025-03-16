@@ -5,6 +5,7 @@ import { formatDate } from '@/helpers/dateHelper';
 import { Record, RecordTypeEnum } from '@/models/domain/accounting/record';
 import { getRecordCategoryRepository } from '@/models/injection';
 import type { Account } from '@/models/domain/accounting/account';
+import { RecordCategory } from '@/models/domain/accounting/recordCategory';
 
 const props = defineProps<{
     modelValue: Record,
@@ -16,6 +17,17 @@ const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YY
 
 const recordCategoryRepository = getRecordCategoryRepository();
 const categories = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Income);
+
+let categoryWithMissed = computed(() => {
+    var result = [...categories];
+    if (!categories.some(c => c.id == props.modelValue.categoryId)) {
+        var deletedCategory = new RecordCategory("已刪除", RecordTypeEnum.Income);
+        deletedCategory.id = props.modelValue.categoryId;
+        result.push(deletedCategory);
+    }
+
+    return result;
+})
 </script>
 
 <template>
@@ -43,7 +55,7 @@ const categories = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.
                 <v-label class="font-weight-medium">類別</v-label>
             </v-col>
             <v-col cols="9">
-                <v-select v-model="modelValue.categoryId" :items="categories" item-title="name" item-value="id"
+                <v-select v-model="modelValue.categoryId" :items="categoryWithMissed" item-title="name" item-value="id"
                     hide-details></v-select>
             </v-col>
         </v-row>

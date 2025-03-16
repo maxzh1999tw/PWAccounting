@@ -128,12 +128,22 @@ async function handleMenuRemove() {
             return;
         }
 
-        await recordRepository.removeAsync(menuTargetRecord.value.id);
-
-        refreshList();
-        fireSnackBar("已刪除一筆紀錄。");
+        removeRecord(menuTargetRecord.value);
     }
+}
 
+async function removeRecord(record: Record) {
+    await recordRepository.removeAsync(record.id!);
+    await new SyncAccountBalancePolicy().onRecordRemovedAsync(record);
+
+    refreshList();
+    fireSnackBar("已刪除一筆紀錄。");
+}
+
+function handleEditDialogDelete(record: Record) {
+    if (record?.id) {
+        removeRecord(record);
+    }
 }
 
 // ==============================
@@ -237,7 +247,8 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
         </v-list>
     </v-card>
 
-    <edit-record-dialog :accounts="accounts" @onSave="onRecordSaved" ref="editRecordDialog"></edit-record-dialog>
+    <edit-record-dialog :accounts="accounts" @onSave="onRecordSaved" ref="editRecordDialog"
+        @onDelete="handleEditDialogDelete"></edit-record-dialog>
 
     <v-snackbar v-model="snackbar" :timeout="2000" @click="snackbar = false">
         {{ snackbarTxt }}

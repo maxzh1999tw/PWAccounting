@@ -61,20 +61,20 @@ onUnmounted(() => emitter.off('any-record-change', refreshList));
                     <h2 class="text-h5">總資產</h2>
                     <h2 class="text-h4 font-weight-regular">{{ displayBalance(totalAssets, CurrencyEnum.NTD) }}</h2>
                 </v-col>
-                <v-col cols="auto">
-                    <v-btn color="primary" prepend-icon="mdi-plus" @click="handleAddClick" class="h-100">
-                        新增
-                    </v-btn>
-                </v-col>
             </v-row>
         </v-card-text>
         <v-divider class="border-opacity-75"></v-divider>
         <v-list>
+            <v-list-item class="py-3 opacity-50" @click="handleAddClick()">
+                <v-list-item-title class="text-subtitle-1"><v-icon icon="mdi-plus"></v-icon>
+                    點擊新增</v-list-item-title>
+            </v-list-item>
+            <v-divider class="border-opacity-75"></v-divider>
             <template v-for="(account, i) in accounts" :key="account.id">
                 <v-list-item color="primary" class="py-3" @click="handleAccountClick(account)">
                     <v-list-item-title class="text-subtitle-1">{{ account.name }}</v-list-item-title>
                     <v-list-item-subtitle class="text-subtitle-2 text-high-emphasis">{{ account.memo
-                        }}</v-list-item-subtitle>
+                    }}</v-list-item-subtitle>
                     <template v-slot:append>
                         <v-list-item-subtitle class="text-subtitle-1 text-high-emphasis mr-3"> {{
                             displayBalance(account.balance, account.currency) }}</v-list-item-subtitle>

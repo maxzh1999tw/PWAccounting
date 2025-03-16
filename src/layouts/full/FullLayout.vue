@@ -61,3 +61,9 @@ function handleNewRecordDialogOpen() {
         </v-app>
     </v-locale-provider>
 </template>
+
+<style>
+.swal2-container {
+    z-index: 9999;
+}
+</style>

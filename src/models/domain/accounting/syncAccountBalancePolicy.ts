@@ -74,7 +74,8 @@ export class SyncAccountBalancePolicy {
     async onRecordRemovedAsync(record: Record) {
         let account = await this.accountRepository.getByIdAsync(record.accountId!);
         if (!account) {
-            throw new Error('Account not found');
+            // 帳號已經被刪除時就不管了
+            return;
         }
 
         if (record.recordType == RecordTypeEnum.Spend) {
@@ -83,12 +84,11 @@ export class SyncAccountBalancePolicy {
             account.balance -= record.amount;
         } else if (record.recordType == RecordTypeEnum.Transfer) {
             let toAccount = await this.accountRepository.getByIdAsync(record.toAccountId!);
-            if (!toAccount) {
-                throw new Error('Account not found');
+            if (toAccount) {
+                toAccount.balance -= record.amount;
+                await this.accountRepository.updateAsync(toAccount);
             }
             account.balance += record.amount;
-            toAccount.balance -= record.amount;
-            await this.accountRepository.updateAsync(toAccount);
         } else {
             throw new Error('RecordType not found');
         }
