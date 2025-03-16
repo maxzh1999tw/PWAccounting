@@ -1,0 +1,1 @@
+var s=Object.defineProperty;var t=(r,e,o)=>e in r?s(r,e,{enumerable:!0,configurable:!0,writable:!0,value:o}):r[e]=o;var c=(r,e,o)=>t(r,typeof e!="symbol"?e+"":e,o);class d{constructor(e,o){c(this,"id");c(this,"name");c(this,"recordType");this.name=e,this.recordType=o}}export{d as R};
