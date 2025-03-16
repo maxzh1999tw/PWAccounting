@@ -42,16 +42,32 @@ const transferRecord = ref(Record.getNewTransferRecord(firstAccountId, secondAcc
 
 const typeTab = ref(RecordTypeEnum.Spend)
 
-watch(typeTab, () => {
-    switch (typeTab.value) {
+watch(typeTab, (newTab, oldTab) => {
+    let oldAmount = 0;
+    switch (oldTab) {
+        case RecordTypeEnum.Spend:
+            oldAmount = spendRecord.value.amount;
+            break;
+        case RecordTypeEnum.Income:
+            oldAmount = incomeRecord.value.amount;
+            break;
+        case RecordTypeEnum.Transfer:
+            oldAmount = transferRecord.value.amount;
+            break;
+    }
+
+    switch (newTab) {
         case RecordTypeEnum.Spend:
             spendRecord.value = Record.getNewSpendRecord(firstSpendCategoryId, firstAccountId);
+            spendRecord.value.amount = oldAmount;
             break;
         case RecordTypeEnum.Income:
             incomeRecord.value = Record.getNewIncomeRecord(firstIncomeCategoryId, firstAccountId);
+            incomeRecord.value.amount = oldAmount;
             break;
         case RecordTypeEnum.Transfer:
             transferRecord.value = Record.getNewTransferRecord(firstAccountId, secondAccountId);
+            transferRecord.value.amount = oldAmount;
             break;
     }
 })
