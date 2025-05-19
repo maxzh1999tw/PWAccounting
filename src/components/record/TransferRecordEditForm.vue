@@ -4,6 +4,7 @@ import DateTimePickerTab from './dateTimePickerTab.vue';
 import { formatDate } from '@/helpers/dateHelper';
 import { Record } from '@/models/domain/accounting/record';
 import type { Account } from '@/models/domain/accounting/account';
+import CalculatorTab from './calculatorTab.vue';
 
 const props = defineProps<{
     modelValue: Record,
@@ -12,6 +13,8 @@ const props = defineProps<{
 
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
 const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YYYY-MM-DD  HH : mm"))
+
+const calculatorTab = useTemplateRef('calculatorTab')
 </script>
 
 <template>
@@ -31,8 +34,8 @@ const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YY
             </v-col>
 
             <v-col cols="9">
-                <v-number-input color="primary" variant="outlined" v-model="modelValue.amount"
-                    hide-details></v-number-input>
+                <v-number-input color="primary" variant="outlined" v-model="modelValue.amount" hide-details
+                    @click="calculatorTab?.open()"></v-number-input>
             </v-col>
         </v-row>
         <v-row class="align-center">
@@ -72,4 +75,5 @@ const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YY
     </v-form>
 
     <DateTimePickerTab v-model="props.modelValue.dateTime" ref="dateTimePickerTab"></DateTimePickerTab>
+    <CalculatorTab v-model="props.modelValue.amount" ref="calculatorTab"></CalculatorTab>
 </template>

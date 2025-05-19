@@ -6,6 +6,7 @@ import { Record, RecordTypeEnum } from '@/models/domain/accounting/record';
 import { getRecordCategoryRepository } from '@/models/injection';
 import type { Account } from '@/models/domain/accounting/account';
 import { RecordCategory } from '@/models/domain/accounting/recordCategory';
+import CalculatorTab from './calculatorTab.vue';
 
 const props = defineProps<{
     modelValue: Record,
@@ -14,6 +15,8 @@ const props = defineProps<{
 
 const dateTimePickerTab = useTemplateRef('dateTimePickerTab')
 const dateTimeDisplay = computed(() => formatDate(props.modelValue.dateTime, "YYYY-MM-DD  HH : mm"))
+
+const calculatorTab = useTemplateRef('calculatorTab')
 
 const recordCategoryRepository = getRecordCategoryRepository();
 const categories = await recordCategoryRepository.getByTypeAsync(RecordTypeEnum.Income);
@@ -46,8 +49,8 @@ let categoryWithMissed = computed(() => {
                 <v-label class="font-weight-medium">金額</v-label>
             </v-col>
             <v-col cols="9">
-                <v-number-input color="primary" variant="outlined" v-model="modelValue.amount"
-                    hide-details></v-number-input>
+                <v-number-input color="primary" variant="outlined" v-model="modelValue.amount" hide-details
+                    @click="calculatorTab?.open()"></v-number-input>
             </v-col>
         </v-row>
         <v-row class="align-center">
@@ -79,4 +82,5 @@ let categoryWithMissed = computed(() => {
     </v-form>
 
     <DateTimePickerTab v-model="props.modelValue.dateTime" ref="dateTimePickerTab"></DateTimePickerTab>
+    <CalculatorTab v-model="props.modelValue.amount" ref="calculatorTab"></CalculatorTab>
 </template>
