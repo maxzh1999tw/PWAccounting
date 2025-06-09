@@ -10,7 +10,7 @@ const emit = defineEmits(['update:modelValue']);
 const isOpen = ref(false);
 const buttons = [['7', '8', '9', 'AC', 'C'], ['4', '5', '6', 'x', '+'], ['1', '2', '3', '/', '-'], ['00', '0', '.', '=', 'OK']];
 
-// Hi 我是Mia
+// Hi 我是Mia and max
 const tempValue = ref(props.modelValue?.toString() ?? "");
 const isFinal = ref(true);
 const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '00']
